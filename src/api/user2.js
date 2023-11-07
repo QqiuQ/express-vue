@@ -10,14 +10,6 @@ export function fetchList(page, limit) {
 }
 
 export function queryList(user) {
-  // axios.post('user', user)
-  //   .then(response => {
-  //     console.log(response.data)
-  //   })
-  //   .catch(error => {
-  //     console.error(error)
-  //   })
-
   return request({
     url: '/user',
     method: 'post',
