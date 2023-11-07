@@ -54,23 +54,23 @@
                     <el-button @click.native.prevent="onEdit(scope.$index)" type="text" size="small">
                         修改
                     </el-button>
-                    
-                    <el-button v-permission="ROLE_SUPER_ADMIN" type="text" size="small">
+
+                    <el-button type="text" size="small">
                         删除
                     </el-button>
                 </template>
             </el-table-column>
         </el-table>
 
-       
+
         <!-- edit dialog -->
         <el-dialog title="修改用户" :visible.sync="editDialogVisible" width="30%">
-            <el-form :label-position="left" label-width="80px" :model="rowUser">
+            <!-- <el-form :label-position="left" label-width="80px" :model="rowUser">
                 <el-form-item label="用户名">
-                  <el-input v-model="rowUser.username"></el-input>
+                    <el-input v-model="rowUser.username"></el-input>
                 </el-form-item>
                 <el-form-item label="昵称">
-                  <el-input v-model="rowUser.nickname"></el-input>
+                    <el-input v-model="rowUser.nickname"></el-input>
                 </el-form-item>
                 <el-form-item label="性别">
                     <el-select v-model="rowUser.sex" clearable placeholder="请选择" @change="onEditSexChange">
@@ -78,8 +78,18 @@
                         </el-option>
                     </el-select>
                 </el-form-item>
+                <el-form-item label="邮箱">
+                    <el-input v-model="rowUser.email"></el-input>
+                </el-form-item>
+                <el-form-item label="手机号">
+                    <el-input v-model="rowUser.phone"></el-input>
+                </el-form-item>
+                <el-form-item label="生日">
+                    <el-date-picker v-model="rowUser.birthday" type="date" placeholder="选择日期">
+                    </el-date-picker>
+                </el-form-item> -->
 
-              </el-form>
+            </el-form>
         </el-dialog>
     </div>
 
@@ -97,7 +107,7 @@
                     { value: 1, label: '男' },
                     { value: 2, label: '未知' }
                 ],
-                rowUser:null,
+                rowUser: null,
                 listLoading: false,
                 userList: null,
                 page: 1,
@@ -128,16 +138,17 @@
             this.queryList()
         },
         methods: {
-            onEditSexChange(val){
-                if(rowUser != null){
-                    rowUser.sex=val
+            onEditSexChange(val) {
+                if (rowUser != null) {
+                    rowUser.sex = val
                 }
             },
-            onEdit(index){
-                this.editDialogVisible=true
+            onEdit(index) {
+                this.editDialogVisible = true
                 // show info
-                this.rowUser=this.userList[index]
-                
+                // deep copy
+                this.rowUser = JSON.parse(JSON.stringify(this.userList[index]))
+
                 console.log(this.rowUser)
             },
             getList() {
