@@ -27,3 +27,13 @@ export function deleteUser(userId) {
     }
   })
 }
+
+export function queryUser(id) {
+  return request({
+    url: '/user',
+    method: 'get',
+    params: {
+      id: id
+    }
+  })
+}
