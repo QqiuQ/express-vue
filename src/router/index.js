@@ -19,7 +19,7 @@ import userRouter from './modules/user'
  *
  * hidden: true                   if set true, item will not show in the sidebar(default is false)
  * alwaysShow: true               if set true, will always show the root menu
- *                                if not set alwaysShow, when item has more than one children route, 
+ *                                if not set alwaysShow, when item has more than one children route,
  *                                it will becomes nested mode, otherwise not show the root menu
  * redirect: noRedirect           if set noRedirect will no redirect in the breadcrumb
  * name:'router-name'             the name is used by <keep-alive> (must set!!!)
@@ -340,7 +340,6 @@ export const asyncRoutes = [
       }
     ]
   },
-
   {
     path: '/pdf',
     component: Layout,
@@ -361,14 +360,14 @@ export const asyncRoutes = [
   },
 
   {
-    path: '/theme',
+    path: '/station',
     component: Layout,
     children: [
       {
         path: 'index',
-        component: () => import('@/views/theme/index'),
-        name: 'Theme',
-        meta: { title: 'Theme', icon: 'theme' }
+        component: () => import('@/views/station/index'),
+        name: 'station',
+        meta: { title: 'station', icon: 'theme' }
       }
     ]
   },
