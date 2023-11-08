@@ -1,13 +1,4 @@
 import request from '@/utils/request'
-import axios from 'axios'
-// 按照页码和页大小获取用户列表
-export function fetchList(page, limit) {
-  return request({
-    url: '/user',
-    method: 'get',
-    params: { page, limit }
-  })
-}
 
 export function queryList(user) {
   return request({
@@ -18,15 +9,21 @@ export function queryList(user) {
   })
 }
 
-export function queryUsers(pageParams, user) {
+export function editUser(user) {
   return request({
-    url: '/user/query',
+    url: '/user/edit',
     method: 'post',
-    // jsonData: true, // 添加jsonData content-type: application/json 向后端請求
     jsonData: true,
+    data: user
+  })
+}
+
+export function deleteUser(userId) {
+  return request({
+    url: '/user/delete',
+    method: 'post',
     params: {
-      pageParams: pageParams,
-      user: user
+      id: userId
     }
   })
 }
