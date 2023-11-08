@@ -32,7 +32,11 @@ service.interceptors.request.use(
       // config.headers['X-Token'] = getToken()
       config.headers['Authorization'] = getToken()
     }
-
+    // 对 post 请求更改起请求的 content-type
+    // 便于后端接受json对象
+    // 因此当 jsonData 为 true，且 method 为 post 时
+    // 表明后端使用了 @RequestBody
+    // 前端传递给后端的是一个 json 对象
     if (config.method.toLocaleLowerCase() === 'post') {
       console.log('config.jsonData: ' + config.jsonData)
       if (config.jsonData) {

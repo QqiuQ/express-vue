@@ -4,7 +4,7 @@ export function queryList(user) {
   return request({
     url: '/user',
     method: 'post',
-    jsonData: true,
+    jsonData: true, // request请求发出之前做了一个处理
     data: user
   })
 }
