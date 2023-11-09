@@ -324,39 +324,33 @@ export const asyncRoutes = [
     ]
   },
 
+  // {
+  //   path: '/zip',
+  //   component: Layout,
+  //   redirect: '/zip/download',
+  //   alwaysShow: true,
+  //   name: 'Zip',
+  //   meta: { title: 'Zip', icon: 'zip' },
+  //   children: [
+  //     {
+  //       path: 'download',
+  //       component: () => import('@/views/zip/index'),
+  //       name: 'ExportZip',
+  //       meta: { title: 'Export Zip' }
+  //     }
+  //   ]
+  // },
   {
-    path: '/zip',
+    path: '/order',
     component: Layout,
-    redirect: '/zip/download',
-    alwaysShow: true,
-    name: 'Zip',
-    meta: { title: 'Zip', icon: 'zip' },
-    children: [
-      {
-        path: 'download',
-        component: () => import('@/views/zip/index'),
-        name: 'ExportZip',
-        meta: { title: 'Export Zip' }
-      }
-    ]
-  },
-  {
-    path: '/pdf',
-    component: Layout,
-    redirect: '/pdf/index',
     children: [
       {
         path: 'index',
-        component: () => import('@/views/pdf/index'),
-        name: 'PDF',
-        meta: { title: 'PDF', icon: 'pdf' }
+        component: () => import('@/views/order/index'),
+        name: 'order',
+        meta: { title: '订单管理', icon: 'pdf' }
       }
     ]
-  },
-  {
-    path: '/pdf/download',
-    component: () => import('@/views/pdf/download'),
-    hidden: true
   },
 
   {
@@ -367,7 +361,7 @@ export const asyncRoutes = [
         path: 'index',
         component: () => import('@/views/station/index'),
         name: 'station',
-        meta: { title: 'station', icon: 'theme' }
+        meta: { title: '网点管理', icon: 'theme' }
       }
     ]
   },
