@@ -38,7 +38,7 @@ service.interceptors.request.use(
     // 表明后端使用了 @RequestBody
     // 前端传递给后端的是一个 json 对象
     if (config.method.toLocaleLowerCase() === 'post') {
-      console.log('config.jsonData: ' + config.jsonData)
+      // console.log('config.jsonData: ' + config.jsonData)
       if (config.jsonData) {
         config.headers['Content-Type'] = 'application/json;charset=UTF-8'
         // config.params = JSON.stringify(config.params)

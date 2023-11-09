@@ -99,3 +99,25 @@ service.interceptors.request.use(
 ```
 
 ## 其他管理页面，可仿照"用户管理"
+
+---
+
+# Vue ---- 全局 getters 使用方法
+
+在 /src/store/getters 新增属性
+
+```javascript
+  accountId: state => state.account.accountId //账户Id
+```
+
+该属性指向 account.js文件里的 accountId 
+
+## 使用
+
+```javascript
+this.$store.getters.accountId
+```
+
+
+
+

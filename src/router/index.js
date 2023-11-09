@@ -285,6 +285,22 @@ export const asyncRoutes = [
   chartsRouter,
   nestedRouter,
   tableRouter,
+  {
+    path: '/station',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/station/index'),
+        name: '站点管理',
+        meta: {
+          title: 'station',
+          icon: 'theme',
+          roles: ['ROLE_SUPER_ADMIN']
+        }
+      }
+    ]
+  },
 
   {
     path: '/example',
@@ -440,19 +456,6 @@ export const asyncRoutes = [
     path: '/pdf/download',
     component: () => import('@/views/pdf/download'),
     hidden: true
-  },
-
-  {
-    path: '/station',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/station/index'),
-        name: 'station',
-        meta: { title: 'station', icon: 'theme' }
-      }
-    ]
   },
 
   {
