@@ -422,7 +422,6 @@ export const asyncRoutes = [
       }
     ]
   },
-
   {
     path: '/pdf',
     component: Layout,
@@ -444,14 +443,14 @@ export const asyncRoutes = [
   },
 
   {
-    path: '/theme',
+    path: '/station',
     component: Layout,
     children: [
       {
         path: 'index',
-        component: () => import('@/views/theme/index'),
-        name: 'Theme',
-        meta: { title: 'Theme', icon: 'theme' }
+        component: () => import('@/views/station/index'),
+        name: 'station',
+        meta: { title: 'station', icon: 'theme' }
       }
     ]
   },
