@@ -103,7 +103,7 @@ export default {
     console.log('ActivityWindow')
     this._getJsonData()
     if (this.childProp != null) {
-      if (this.childProp.length != 0) {
+      if (this.childProp.length !== 0) {
         this.form = this.childProp
       } else {
         console.log('1111')

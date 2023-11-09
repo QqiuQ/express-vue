@@ -11,7 +11,7 @@ import componentsRouter from './modules/components'
 import chartsRouter from './modules/charts'
 import tableRouter from './modules/table'
 import nestedRouter from './modules/nested'
-import userRouter from './modules/user'
+import employeeRouter from './modules/employee' // 员工管理路由
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -56,6 +56,7 @@ export const constantRoutes = [
     component: () => import('@/views/login/employee/index'),
     hidden: true
   },
+
   {
     path: '/register',
     component: () => import('@/views/register/index'),
@@ -91,6 +92,89 @@ export const constantRoutes = [
         component: () => import('@/views/dashboard/index'),
         name: 'Dashboard',
         meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
+      }
+    ]
+  },
+  {
+    path: '/send',
+    component: Layout,
+    redirect: '/send/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/user/send'),
+        name: '我要寄件',
+        meta: { title: '我要寄件', icon: 'skill', roles: ['ROLE_SUPER_ADMIN', 'ROLE_USER'] }
+      }
+    ]
+  },
+  {
+    path: '/sent',
+    component: Layout,
+    redirect: '/sent/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/user/sent'),
+        name: '我寄的',
+        meta: { title: '我寄的', icon: 'skill', roles: ['ROLE_SUPER_ADMIN', 'ROLE_USER'] }
+      }
+    ]
+  },
+  {
+    path: '/received',
+    component: Layout,
+    redirect: '/received/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/user/received'),
+        name: '我收的',
+        meta: { title: '我收的', icon: 'skill', roles: ['ROLE_SUPER_ADMIN', 'ROLE_USER'] }
+      }
+    ]
+  },
+  {
+    path: '/addressBooks',
+    component: Layout,
+    redirect: '/addressBooks/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/user/addressBooks'),
+        name: '地址簿',
+        meta: { title: '地址簿', icon: 'skill', roles: ['ROLE_SUPER_ADMIN', 'ROLE_USER'] }
+      }
+    ]
+  },
+  {
+    path: '/locationEnquiry',
+    component: Layout,
+    redirect: '/locationEnquiry/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/user/locationEnquiry'),
+        name: '网点查询',
+        meta: { title: '网点查询', icon: 'skill', roles: ['ROLE_SUPER_ADMIN', 'ROLE_USER'] }
+      }
+    ]
+  },
+//用户管理路由
+  {
+    path: '/user', // 路由路径
+    component: Layout,
+    redirect: '/user/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/user/index'), // 指向 views/user/index.vue这个页面
+        name: '用户管理',
+        meta: {
+          title: '用户管理', // 侧边栏菜单名称
+          icon: 'table', // 侧边栏菜单图标
+          roles: ['ROLE_SUPER_ADMIN', 'ROLE_USER'] // 动态路由，这些角色可以显示该菜单
+        }
       }
     ]
   },
@@ -141,8 +225,9 @@ export const constantRoutes = [
  * 根据权限动态添加路由
  */
 export const asyncRoutes = [
-  userRouter,
-  // 用户管理路由
+  // 员工管理动态路由
+  employeeRouter,
+
   {
     path: '/permission',
     component: Layout,
@@ -203,6 +288,22 @@ export const asyncRoutes = [
   chartsRouter,
   nestedRouter,
   tableRouter,
+  {
+    path: '/station',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/station/index'),
+        name: '站点管理',
+        meta: {
+          title: 'station',
+          icon: 'theme',
+          roles: ['ROLE_SUPER_ADMIN']
+        }
+      }
+    ]
+  },
 
   {
     path: '/example',
@@ -353,6 +454,7 @@ export const asyncRoutes = [
     ]
   },
 
+
   {
     path: '/station',
     component: Layout,
@@ -366,7 +468,13 @@ export const asyncRoutes = [
     ]
   },
 
+
+
+
+
+
   {
+
     path: '/clipboard',
     component: Layout,
     children: [

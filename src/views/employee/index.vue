@@ -1,33 +1,54 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-form :inline="true" :model="user" class="demo-form-inline">
+      <el-form :inline="true" :model="queryEmployee" class="demo-form-inline">
         <el-form-item label="用户名">
-          <el-input v-model="user.username" placeholder="用户名" clearable/>
+          <el-input v-model="queryEmployee.username" placeholder="用户名" clearable/>
         </el-form-item>
-        <el-form-item label="昵称">
-          <el-input v-model="user.nickname" placeholder="昵称" clearable/>
+        <el-form-item label="姓名">
+          <el-input v-model="queryEmployee.name" placeholder="姓名" clearable/>
+        </el-form-item>
+        <el-form-item label="工号">
+          <el-input v-model="queryEmployee.code" placeholder="工号" clearable/>
         </el-form-item>
         <el-form-item label="邮箱">
-          <el-input v-model="user.email" placeholder="邮箱" clearable/>
+          <el-input v-model="queryEmployee.email" placeholder="邮箱" clearable/>
         </el-form-item>
         <el-form-item label="手机号">
-          <el-input v-model="user.phone" placeholder="手机号" clearable/>
+          <el-input v-model="queryEmployee.phone" placeholder="手机号" clearable/>
+        </el-form-item>
+        <el-form-item label="住址">
+          <el-input v-model="queryEmployee.address" placeholder="住址" clearable/>
         </el-form-item>
         <el-form-item label="性别">
-          <el-select v-model="user.sex" clearable placeholder="请选择" @change="onSexChanged">
+          <el-select v-model="queryEmployee.sex" clearable placeholder="请选择" @change="onSexChanged">
             <el-option v-for="item in sexOptions" :key="item.value" :label="item.label" :value="item.value"/>
           </el-select>
         </el-form-item>
         <el-form-item label="账户状态">
           <el-select
-            v-model="user.accountStatus"
+            v-model="queryEmployee.accountStatus"
             clearable
             placeholder="请选择"
             @change="onAccountStatusChanged"
           >
             <el-option
               v-for="item in accountStatusOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="员工状态">
+          <el-select
+            v-model="queryEmployee.status"
+            clearable
+            placeholder="请选择"
+            @change="onStatusChanged"
+          >
+            <el-option
+              v-for="item in statusOptions"
               :key="item.value"
               :label="item.label"
               :value="item.value"
@@ -42,9 +63,10 @@
     </div>
 
     <el-table :data="pageList" style="width: 100%" max-height="500">
-      <el-table-column fixed prop="username" label="用户名"/>
-      <el-table-column fixed prop="nickname" label="昵称"/>
       <el-table-column fixed prop="avatar" label="头像"/>
+      <el-table-column fixed prop="username" label="用户名"/>
+      <el-table-column fixed prop="code" label="工号"/>
+      <el-table-column fixed prop="name" label="姓名"/>
       <el-table-column fixed prop="sex" label="性别">
         <template slot-scope="scope">
           <el-tag :type="sexTagColor[scope.row.sex]" close-transition>{{ sexTag[scope.row.sex] }}</el-tag>
@@ -52,8 +74,6 @@
       </el-table-column>
       <el-table-column fixed prop="email" label="邮箱"/>
       <el-table-column fixed prop="phone" label="手机号"/>
-      <el-table-column fixed prop="birthday" label="生日"/>
-      <el-table-column fixed prop="lastLoginTime" label="上次登录时间"/>
       <el-table-column fixed prop="accountStatus" label="账户状态">
         <template slot-scope="scope">
           <el-tag
@@ -63,6 +83,21 @@
           </el-tag>
         </template>
       </el-table-column>
+      <el-table-column fixed prop="status" label="员工状态">
+        <template slot-scope="scope">
+          <el-tag
+            :type="accountStatusTagColor[scope.row.status]"
+            close-transition
+          >{{ statusTag[scope.row.status] }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column fixed prop="address" label="住址"/>
+
+      <el-table-column fixed prop="hireDate" label="入职日期"/>
+
+      <el-table-column fixed prop="lastLoginTime" label="上次登录时间"/>
+
 
       <el-table-column fixed="right" label="操作" width="120">
         <template slot-scope="scope">
@@ -93,78 +128,120 @@
     </el-footer>
 
     <!-- detail drawer -->
-    <el-drawer title="用户详情" :visible.sync="detailDrawerVisible" :direction="lrt">
-      <div style="padding: 20px; display: flex; flex-direction: column">
-        <div>
-          <span>用户名：</span><span>{{ detailUser.username }}</span>
-        </div>
-        <div>
-          <span>电话：</span><span>{{ detailUser.phone }}</span>
-        </div>
-        <div>
-          <span>生日：</span><span>{{ detailUser.birthday }}</span>
-        </div>
-        <div>
-          <span>创建时间：</span><span>{{ detailUser.createTime }}</span>
-        </div>
-        <div>
-          <span>最后登录时间：</span><span>{{ detailUser.lastLoginTime }}</span>
-        </div>
-      </div>
+    <el-drawer title="员工详情" :visible.sync="detailDrawerVisible" direction="ltr" size="50%">
+      <el-row type="flex" justify="center" align="middle">
+        <el-avatar
+          :size="120"
+          src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+        />
+
+        <!-- <el-avatar src="rowData.avatar"></el-avatar> -->
+      </el-row>
+      <el-divider></el-divider>
+      <el-descriptions class="margin-top" title="个人信息" :column="3" :size="medium" border>
+        <el-descriptions-item>
+          <template slot="label">
+            <i class="el-icon-user"></i>
+            用户名
+          </template>
+          kooriookami
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            <i class="el-icon-user"></i>
+            用户名
+          </template>
+          kooriookami
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            <i class="el-icon-user"></i>
+            用户名
+          </template>
+          kooriookami
+        </el-descriptions-item>
+      </el-descriptions>
     </el-drawer>
 
     <!-- edit dialog -->
-    <el-dialog title="修改用户" :visible.sync="editDialogVisible" width="50%">
+    <el-dialog title="修改用户" :visible.sync="editDialogVisible" width="80%">
 
-      <el-form v-model="rowUser" label-width="80px">
+      <el-form v-model="rowData" label-width="80px">
         <el-row type="flex" justify="center" align="middle" style="margin-bottom: 20px;">
           <el-avatar
             :size="100"
             src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
           />
-          <!-- <el-avatar src="rowUser.avatar"></el-avatar> -->
+          <!-- <el-avatar src="rowData.avatar"></el-avatar> -->
         </el-row>
+        <el-divider></el-divider>
         <el-row>
           <el-col :span="12">
             <el-form-item label="用户名">
-              <el-input v-model="rowUser.username" disabled/>
+              <el-input v-model="rowData.username" disabled/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="昵称">
-              <el-input v-model="rowUser.nickname"/>
+            <el-form-item label="工号">
+              <el-input v-model="rowData.code" disabled/>
             </el-form-item>
           </el-col>
-
         </el-row>
+        <el-row>
+
+          <el-col :span="12">
+            <el-form-item label="姓名">
+              <el-input v-model="rowData.name"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="性别">
+              <el-select v-model="rowData.sex" clearable placeholder="请选择" @change="onEditSexChange">
+                <el-option v-for="item in sexOptions" :key="item.value" :label="item.label" :value="item.value"/>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
         <el-row>
           <el-col :span="12">
             <el-form-item label="邮箱">
-              <el-input v-model="rowUser.email"/>
+              <el-input v-model="rowData.email"/>
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="手机号">
-              <el-input v-model="rowUser.phone"/>
+              <el-input v-model="rowData.phone"/>
             </el-form-item>
           </el-col>
         </el-row>
 
-        <el-form-item label="性别">
-          <el-select v-model="rowUser.sex" clearable placeholder="请选择" @change="onEditSexChange">
-            <el-option v-for="item in sexOptions" :key="item.value" :label="item.label" :value="item.value"/>
-          </el-select>
-        </el-form-item>
 
-        <el-form-item label="生日">
-          <el-date-picker v-model="rowUser.birthday" type="date" placeholder="选择日期"/>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="账户状态">
+              <el-radio-group v-model="rowData.accountStatus">
+                <el-radio-button label="0">正常</el-radio-button>
+                <el-radio-button label="1">封禁</el-radio-button>
+                <el-radio-button label="2">注销</el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="员工状态">
+              <el-radio-group v-model="rowData.status">
+                <el-radio-button label="0">在岗</el-radio-button>
+                <el-radio-button label="1">离职</el-radio-button>
+                <el-radio-button label="2">休假</el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-form-item label="家庭住址">
+          <el-input v-model="rowData.address"/>
         </el-form-item>
-        <el-form-item label="账户状态">
-          <el-radio-group v-model="rowUser.accountStatus">
-            <el-radio-button label="0">正常</el-radio-button>
-            <el-radio-button label="1">封禁</el-radio-button>
-            <el-radio-button label="2">注销</el-radio-button>
-          </el-radio-group>
+        <el-form-item label="入职日期">
+          <el-date-picker v-model="rowData.hireDate" type="date" placeholder="入职日期"/>
         </el-form-item>
 
         <el-row type="flex" justify="end" align="middle">
@@ -184,7 +261,8 @@
 
 </template>
 <script>
-import { queryList, editUser, deleteUser, queryUser } from '@/api/user2'
+import { deleteUser, queryUser } from '@/api/user2'
+import { queryList, editEmployee, deleteEmployee } from '@/api/employee'
 
 export default {
 
@@ -220,39 +298,36 @@ export default {
         { value: 0, label: '正常' },
         { value: 1, label: '封禁' },
         { value: 2, label: '注销' }],
+      statusOptions: [
+        { value: 0, label: '在职' },
+        { value: 1, label: '离职' },
+        { value: 2, label: '休假' }
+      ],
       sexOptions: [
         { value: 0, label: '女' },
         { value: 1, label: '男' },
         { value: 2, label: '未知' }
       ],
       listLoading: false,
-      userList: null, // 总List
+      employeeList: null, // 总List
       pageList: null, // 分页List
-      totalRecords: 0, // userList总记录
+      totalRecords: 0, // employeeList总记录
       currentPage: 1, // 当前页
       pageLimit: 5, // 页大小
-      user: {
-        nickname: null,
+      queryEmployee: {
+        name: null,
+        code: null,
         sex: null,
         phone: null,
-        birthday: null,
-        registerTime: null,
         username: null,
         email: null,
         accountStatus: null,
-        lastLoginTime: null
+        lastLoginTime: null,
+        status: null,
+        hireDate: null,
+        address: null
       },
-      detailUser: {
-        username: '',
-        email: '',
-        createTime: '',
-        updateTime: '',
-        lastLoginTime: '',
-        nickname: '',
-        phone: '',
-        birthday: ''
-      },
-      rowUser: {
+      rowData: {
         username: null,
         nickname: null,
         email: null,
@@ -261,12 +336,17 @@ export default {
         sex: null,
         accountStatus: null
       },
-      tmpRowUser: null,
-      userIdx: null,
+      tmpRowData: null,
+      rowDataIdx: null,
       accountStatusTag: {
         0: '正常',
         1: '封禁',
         2: '注销'
+      },
+      statusTag: {
+        0: '在职',
+        1: '离职',
+        2: '休假'
       },
       accountStatusTagColor: {
         0: 'success',
@@ -286,21 +366,16 @@ export default {
     }
   },
   created() {
-    // this.resetRowUser()
-    // window.alert("loginAccountId: " + this.$store.getters.accountId)
-
-    this.onQuery(this.user)
+    this.onQuery()
   },
   methods: {
+
     onOpenDetailDrawer(index) {
       this.detailDrawerVisible = true
-      this.userIdx = this.getRowDataIndex(index)
-      this.tmpRowUser = this.userList[this.userIdx]
-      console.log(this.tmpRowUser.id)
-      console.log(this.tmpRowUser)
-      this.onQueryOneUser(this.tmpRowUser.id)
+      const idx = this.getRowDataIndex(index)
+      this.rowData = this.employeeList[idx]
     },
-    getRowDataIndex(rowIndex) { // 获取该页数据在userList的索引
+    getRowDataIndex(rowIndex) { // 获取该页数据在employeeList的索引
       return rowIndex + (this.currentPage - 1) * this.pageLimit
     },
     handleCurrentChange(val) {
@@ -312,79 +387,55 @@ export default {
       this.showPageList(this.currentPage, this.pageLimit)
     },
     showPageList(page, limit) {
-      if (this.userList != null) {
-        // console.log(this.userList)
+      if (this.employeeList != null) {
         const start = (this.currentPage - 1) * this.pageLimit
-        this.pageList = this.userList.slice(start, start + this.pageLimit)
+        this.pageList = this.employeeList.slice(start, start + this.pageLimit)
       }
     },
     filterAccountStatusTag(val, row) {
       return row.accountStatus === val
     },
+
     onDeleteConfirm() {
-      // console.log(this.userIdx)
-      // console.log(this.userList[this.userIdx])
-      deleteUser(this.userList[this.userIdx].id)
-      this.userList.splice(this.userIdx, 1)
-      this.deleteDialogVisible = false
-      this.userIdx = null
+      // console.log(this.rowDataIdx)
+      // console.log(this.employeeList[this.rowDataIdx])
+      deleteEmployee(this.employeeList[this.rowDataIdx].id).then(response => {
+        this.deleteDialogVisible = false
+        this.onQuery()
+      })
+      this.rowDataIdx = null
     },
     onOpenDeleteDialog(index) {
       this.deleteDialogVisible = true
-      this.userIdx = this.getRowDataIndex(index)
+      this.rowDataIdx = this.getRowDataIndex(index)
     },
-    resetRowUser() {
-      this.rowUser.username = null
-      this.rowUser.birthday = null
-      this.rowUser.nickname = null
-      this.rowUser.email = null
-      this.rowUser.phone = null
-      this.rowUser.sex = null
-      this.rowUser.accountStatus = null
-    },
+
     onEditSave() {
       // 编辑保存按钮
-      this.setUserData(this.tmpRowUser, this.rowUser)
-      // this.tmpRowUser.birthday = this.getFormatDate(this.tmpRowUser.birthday)
-      // console.log()
-      this.tmpRowUser.birthday = (new Date(this.tmpRowUser.birthday)).format('yyyy-MM-dd').toString()
-      editUser(this.tmpRowUser).then(response => {
+      editEmployee(this.rowData).then(response => {
         this.$message('修改成功')
         this.editDialogVisible = false
+        this.onQuery()  // 重新读取
       })
-      // this.resetRowUser()
     },
     onEditSexChange(val) {
       // eslint-disable-next-line no-undef
-      if ($.isEmptyObject(this.rowUser)) {
-        this.rowUser.sex = val
+      if ($.isEmptyObject(this.rowData)) {
+        this.rowData.sex = val
       }
-    },
-    setUserData(user, data) {
-      // console.log(data)
-      user.username = data.username
-      user.nickname = data.nickname
-      user.phone = data.phone
-      user.email = data.email
-      user.sex = data.sex
-      user.birthday = data.birthday
-      // user.birthday = dataFormater.format(data.birthday)
-      user.accountStatus = data.accountStatus
     },
     onOpenEditDialog(index) {
       const idx = this.getRowDataIndex(index)
       this.editDialogVisible = true
-      // show info
-      // deep copy
-      this.tmpRowUser = this.userList[idx]
-      this.setUserData(this.rowUser, this.tmpRowUser)
+
+      // this.tmpRowData =
+      this.rowData = JSON.parse(JSON.stringify(this.employeeList[idx]))
     },
-    onQuery(user) {
-      queryList(this.user).then(response => {
-        // console.log(response)
-        // response.data
-        this.userList = response.data
-        this.totalRecords = this.userList.length
+    // 员工查询
+    onQuery() {
+      queryList(this.queryEmployee).then(response => {
+        this.employeeList = response.data
+        this.totalRecords = this.employeeList.length
         this.showPageList(this.currentPage, this.pageLimit)
       })
     },
@@ -396,10 +447,13 @@ export default {
       })
     },
     onSexChanged(val) {
-      this.user.sex = val
+      this.queryEmployee.sex = val
     },
     onAccountStatusChanged(val) {
-      this.user.accountStatus = val
+      this.queryEmployee.accountStatus = val
+    },
+    onStatusChanged(val) {
+      this.queryEmployee.status = val
     }
 
   }

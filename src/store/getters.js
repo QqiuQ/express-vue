@@ -11,7 +11,8 @@ const getters = {
   roles: state => state.account.roles,
   permission_routes: state => state.permission.routes,
   errorLogs: state => state.errorLog.logs,
-  accountType: state => state.account.type
+  accountType: state => state.account.accountType, // accountType 账户类型
+  accountId: state => state.account.accountId //账户Id
 }
 export default getters
 

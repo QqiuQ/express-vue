@@ -7,6 +7,7 @@ const state = {
   name: '',
   avatar: '',
   accountType: '',
+  accountId: '',
   introduction: '',
   roles: []
 }
@@ -14,6 +15,9 @@ const state = {
 const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token
+  },
+  SET_ACCOUNT_ID: (state, id) => {
+    state.accountId = id
   },
   SET_ACCOUNT_TYPE: (state, accountType) => {
     state.accountType = accountType
@@ -40,12 +44,15 @@ const actions = {
     // 将username与accountType拼接
     // 方便实现后端的双表登录
     let usernameAndType = username.trim() + '#' + accountType
-    console.log("usernameAndType: " + usernameAndType)
+    // console.log('usernameAndType: ' + usernameAndType)
     return new Promise((resolve, reject) => {
       login({ username: usernameAndType, password: password }).then(response => {
         const { data } = response
-        const { token } = data
+        const { token, accountId } = data
         commit('SET_TOKEN', token)
+        // 保存账户ID
+        commit('SET_ACCOUNT_ID', accountId)
+        console.log('accountId: ' + accountId)
         setToken(token) // 将token存储到Cookie
         resolve()
       }).catch(error => {
@@ -56,8 +63,8 @@ const actions = {
 
   // get user info
   getInfo({ commit, state }) {
-    console.log("state.accountType: " + state.accountType)
-    console.log("state.token: " + state.token)
+    // console.log('state.accountType: ' + state.accountType)
+    // console.log('state.token: ' + state.token)
 
     return new Promise((resolve, reject) => {
       // 根据 api 中的getInfo接口获取账户信息
