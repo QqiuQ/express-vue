@@ -61,6 +61,11 @@
         </el-form-item>
       </el-form>
     </div>
+    <div>
+      <el-row>
+        <el-button primary @click="onOpenAddEmployeeDialog">新增员工</el-button>
+      </el-row>
+    </div>
 
     <el-table :data="pageList" style="width: 100%" max-height="500">
       <el-table-column fixed prop="avatar" label="头像"/>
@@ -134,43 +139,253 @@
           :size="120"
           src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
         />
-
         <!-- <el-avatar src="rowData.avatar"></el-avatar> -->
       </el-row>
       <el-divider></el-divider>
-      <el-descriptions class="margin-top" title="个人信息" :column="3" :size="medium" border>
-        <el-descriptions-item>
-          <template slot="label">
-            <i class="el-icon-user"></i>
-            用户名
-          </template>
-          kooriookami
-        </el-descriptions-item>
-        <el-descriptions-item>
-          <template slot="label">
-            <i class="el-icon-user"></i>
-            用户名
-          </template>
-          kooriookami
-        </el-descriptions-item>
-        <el-descriptions-item>
-          <template slot="label">
-            <i class="el-icon-user"></i>
-            用户名
-          </template>
-          kooriookami
-        </el-descriptions-item>
-      </el-descriptions>
+
+      <div style="margin: 20px">
+        <el-descriptions class="margin-top" title="个人信息" :column="3" border>
+          <el-descriptions-item>
+            <template slot="label">
+              姓名
+            </template>
+            {{ rowData.name }}
+          </el-descriptions-item>
+          <el-descriptions-item>
+            <template slot="label">
+              性别
+            </template>
+            <el-tag
+              :type="sexTagColor[rowData.sex]"
+              close-transition
+            >{{ sexTag[rowData.sex] }}
+            </el-tag>
+          </el-descriptions-item>
+          <el-descriptions-item>
+            <template slot="label">
+              员工状态
+            </template>
+            <el-tag
+              :type="accountStatusTagColor[rowData.status]"
+              close-transition
+            >{{ statusTag[rowData.status] }}
+            </el-tag>
+          </el-descriptions-item>
+
+          <el-descriptions-item>
+            <template slot="label">
+              手机号
+            </template>
+            {{ rowData.phone }}
+          </el-descriptions-item>
+
+          <el-descriptions-item :column="2">
+            <template slot="label">
+              邮箱
+            </template>
+            {{ rowData.email }}
+          </el-descriptions-item>
+          <el-descriptions-item>
+            <template slot="label">
+              入职日期
+            </template>
+            {{ rowData.hireDate }}
+          </el-descriptions-item>
+          <el-descriptions-item>
+            <template slot="label">
+              住址
+            </template>
+            {{ rowData.address }}
+          </el-descriptions-item>
+
+        </el-descriptions>
+
+        <el-divider></el-divider>
+        <el-descriptions class="margin-top" title="账户信息" :column="3" border>
+          <el-descriptions-item>
+            <template slot="label">
+              用户名
+            </template>
+            {{ rowData.username }}
+          </el-descriptions-item>
+          <el-descriptions-item>
+            <template slot="label">
+              工号
+            </template>
+            {{ rowData.code }}
+          </el-descriptions-item>
+          <el-descriptions-item>
+            <template slot="label">
+              账户状态
+            </template>
+            <el-tag
+              :type="accountStatusTagColor[rowData.accountStatus]"
+              close-transition
+            >{{ accountStatusTag[rowData.accountStatus] }}
+            </el-tag>
+          </el-descriptions-item>
+          <el-descriptions-item>
+            <template slot="label">
+              创建时间
+            </template>
+            {{ rowData.createTime }}
+          </el-descriptions-item>
+
+          <el-descriptions-item>
+            <template slot="label">
+              更新时间
+            </template>
+            {{ rowData.updateTime }}
+          </el-descriptions-item>
+
+          <el-descriptions-item>
+            <template slot="label">
+              上次登录
+            </template>
+            {{ rowData.lastLoginTime }}
+          </el-descriptions-item>
+        </el-descriptions>
+
+      </div>
     </el-drawer>
+
+    <!-- add dialog -->
+    <el-dialog title="新增员工" :visible.sync="addDialogVisible" width="80%">
+
+      <el-form v-model="newFormData" label-width="80px">
+        <el-row type="flex" justify="center" align="middle" style="margin-bottom: 20px;">
+
+          <!--          <el-upload-->
+          <!--            class="avatar-uploader"-->
+          <!--            action="#"-->
+          <!--            :show-file-list="false"-->
+          <!--            :on-success="handleAvatarSuccess"-->
+          <!--            :before-upload="beforeAvatarUpload"-->
+          <!--            :http-request="handleUploadAvatar"-->
+          <!--          >-->
+          <!--            <img v-if="rowData.avatar" :src="rowData.avatar" class="avatar">-->
+          <!--            <i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
+          <!--          </el-upload>-->
+          <!--          <img src="../../assets/upload/6bd5e119e66841bba621ee4a6b1db576-fzu.jpg" alt="绳之以法" width="100%">-->
+
+          <el-avatar
+            :size="100"
+            src="imageUrl"
+          />
+
+          <el-avatar
+            :size="100"
+            src="https://p.qqan.com/up/2021-6/16246735796128385.png"
+          />
+          <!-- <el-avatar src="rowData.avatar"></el-avatar> -->
+        </el-row>
+        <el-divider></el-divider>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="用户名">
+              <el-input v-model=" newFormData.username"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="工号">
+              <el-input v-model=" newFormData.code"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-form-item label="密码">
+            <el-input v-model=" newFormData.password"/>
+          </el-form-item>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="姓名">
+              <el-input v-model=" newFormData.name"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="性别">
+              <el-select v-model=" newFormData.sex" clearable placeholder="请选择" @change="onEditSexChange">
+                <el-option v-for="item in sexOptions" :key="item.value" :label="item.label" :value="item.value"/>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="邮箱">
+              <el-input v-model=" newFormData.email"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="手机号">
+              <el-input v-model=" newFormData.phone"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="账户状态">
+              <el-radio-group v-model=" newFormData.accountStatus">
+                <el-radio-button label="0">正常</el-radio-button>
+                <el-radio-button label="1">封禁</el-radio-button>
+                <el-radio-button label="2">注销</el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="员工状态">
+              <el-radio-group v-model=" newFormData.status">
+                <el-radio-button label="0">在岗</el-radio-button>
+                <el-radio-button label="1">离职</el-radio-button>
+                <el-radio-button label="2">休假</el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-form-item label="家庭住址">
+          <el-input v-model=" newFormData.address"/>
+        </el-form-item>
+        <el-form-item label="入职日期">
+          <el-date-picker v-model=" newFormData.hireDate" type="date" placeholder="入职日期"/>
+        </el-form-item>
+
+        <el-row type="flex" justify="end" align="middle">
+          <el-button type="primary" round @click="onAddSave">保存</el-button>
+        </el-row>
+      </el-form>
+    </el-dialog>
 
     <!-- edit dialog -->
     <el-dialog title="修改用户" :visible.sync="editDialogVisible" width="80%">
 
       <el-form v-model="rowData" label-width="80px">
         <el-row type="flex" justify="center" align="middle" style="margin-bottom: 20px;">
+
+          <!--          <el-upload-->
+          <!--            class="avatar-uploader"-->
+          <!--            action="#"-->
+          <!--            :show-file-list="false"-->
+          <!--            :on-success="handleAvatarSuccess"-->
+          <!--            :before-upload="beforeAvatarUpload"-->
+          <!--            :http-request="handleUploadAvatar"-->
+          <!--          >-->
+          <!--            <img v-if="rowData.avatar" :src="rowData.avatar" class="avatar">-->
+          <!--            <i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
+          <!--          </el-upload>-->
+          <!--          <img src="../../assets/upload/6bd5e119e66841bba621ee4a6b1db576-fzu.jpg" alt="绳之以法" width="100%">-->
+
           <el-avatar
             :size="100"
-            src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+            src="imageUrl"
+          />
+
+          <el-avatar
+            :size="100"
+            src="https://p.qqan.com/up/2021-6/16246735796128385.png"
           />
           <!-- <el-avatar src="rowData.avatar"></el-avatar> -->
         </el-row>
@@ -188,7 +403,6 @@
           </el-col>
         </el-row>
         <el-row>
-
           <el-col :span="12">
             <el-form-item label="姓名">
               <el-input v-model="rowData.name"/>
@@ -261,8 +475,8 @@
 
 </template>
 <script>
-import { deleteUser, queryUser } from '@/api/user2'
-import { queryList, editEmployee, deleteEmployee } from '@/api/employee'
+import { queryList, editEmployee, deleteEmployee, addEmployee } from '@/api/employee'
+import { uploadAvatar } from '@/api/file'
 
 export default {
 
@@ -291,6 +505,9 @@ export default {
       return fmt
     }
     return {
+      imageUrl: encodeURI('../../assets/upload/6bd5e119e66841bba621ee4a6b1db576-fzu.jpg'),
+      // imageUrl:'upload/'+encodeURI('avatars/45d7122ca9834c658dbaa3a1a8149337-fzu.jpg'),
+      addDialogVisible: false,
       detailDrawerVisible: false,
       deleteDialogVisible: false,
       editDialogVisible: false,
@@ -328,15 +545,31 @@ export default {
         address: null
       },
       rowData: {
-        username: null,
-        nickname: null,
-        email: null,
-        phone: null,
-        birthday: null,
-        sex: null,
-        accountStatus: null
+        username: '',
+        code: '',
+        name: '',
+        email: '',
+        phone: '',
+        hireDate: null,
+        sex: 2,
+        accountStatus: 0,
+        password: '',
+        status: 0,
+        address: ''
       },
-      tmpRowData: null,
+      newFormData: {
+        username: '',
+        code: '',
+        name: '',
+        email: '',
+        phone: '',
+        hireDate: null,
+        sex: 2,
+        accountStatus: 0,
+        password: '',
+        status: 0,
+        address: ''
+      },
       rowDataIdx: null,
       accountStatusTag: {
         0: '正常',
@@ -369,7 +602,46 @@ export default {
     this.onQuery()
   },
   methods: {
-
+    handleUploadAvatar(param) {
+      const formData = new FormData()
+      formData.append('file', param.file)
+      uploadAvatar(formData)
+        .then((response) => {
+          console.log('上传图片成功')
+          this.rowData.avatar = url(response.data.path)
+          console.log(this.rowData.avatar)
+          // this.formData.fileList.push([
+          //   { name: param.file.name, url: response.data.data }
+          // ])
+          // console.log(this.formData.fileList)
+        })
+    },
+    handleAvatarSuccess(res, file) {
+      console.log(res)
+      console.log(file)
+      // this.rowData.avatar = file.response.data.fullUrl
+    },
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === 'image/jpeg' || 'image/jpg' || 'image/webp' || 'image/png'
+      const isLt2M = file.size / 1024 / 1024 < 2
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 jgp,jpeg,webp,png格式!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+      }
+      return isJPG && isLt2M
+    },
+    onAddSave() {
+      addEmployee(this.newFormData).then(response => {
+        this.$message('添加成功')
+        this.addDialogVisible = false
+        this.onQuery()  // 重新读取
+      })
+    },
+    onOpenAddEmployeeDialog() {
+      this.addDialogVisible = true
+    },
     onOpenDetailDrawer(index) {
       this.detailDrawerVisible = true
       const idx = this.getRowDataIndex(index)
@@ -397,8 +669,6 @@ export default {
     },
 
     onDeleteConfirm() {
-      // console.log(this.rowDataIdx)
-      // console.log(this.employeeList[this.rowDataIdx])
       deleteEmployee(this.employeeList[this.rowDataIdx].id).then(response => {
         this.deleteDialogVisible = false
         this.onQuery()
@@ -411,6 +681,7 @@ export default {
     },
 
     onEditSave() {
+
       // 编辑保存按钮
       editEmployee(this.rowData).then(response => {
         this.$message('修改成功')
@@ -425,6 +696,7 @@ export default {
       }
     },
     onOpenEditDialog(index) {
+
       const idx = this.getRowDataIndex(index)
       this.editDialogVisible = true
 
@@ -437,13 +709,6 @@ export default {
         this.employeeList = response.data
         this.totalRecords = this.employeeList.length
         this.showPageList(this.currentPage, this.pageLimit)
-      })
-    },
-    onQueryOneUser(id) {
-      queryUser(id).then(res => {
-        this.detailUser = res.data
-        console.log(res.data)
-        console.log(this.detailUser)
       })
     },
     onSexChanged(val) {
