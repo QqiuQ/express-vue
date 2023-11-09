@@ -49,9 +49,9 @@
       <el-table-column label="管理员电话" prop="managerrecipient_address" /> -->
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <el-button @click.native.prevent="onOpenDetailDrawer(scope.$index)" type="text" size="small">
-                详情
-            </el-button>
+          <el-button type="text" size="small" @click.native.prevent="onOpenDetailDrawer(scope.$index)">
+            详情
+          </el-button>
           <el-button type="text" size="small" @click="handleEdit(scope.$index, scope.$row)">
             修改
           </el-button>
@@ -120,7 +120,7 @@ export default {
         stationName: '',
         stationManager: '',
         managerrecipient_address: '',
-        courier_code:''
+        courier_code: ''
       },
       parentData: [],
       multipleSelection: []
@@ -152,7 +152,7 @@ export default {
       this.addOperate_edit = true
       this.parentData = this.view_order[index]
     },
-    
+
     edit_order() {
       const childCom = this.$refs.popWindow
       const formData = childCom.fromData()
@@ -166,19 +166,19 @@ export default {
         this.pages.totalData = this.total_order.length
       })
     },
-    onOpenDetailDrawer(index){
+    onOpenDetailDrawer(index) {
       this.windowVisible = true
       this.addOperate = true
       this.parentData = this.view_order[index]
     },
     SearchEvent() {
-      let recipient_address = '', recipient_name = '', sender_name = '',express_number = '', sender_address = '', courier_code='';
+      let recipient_address = ''; let recipient_name = ''; let sender_name = ''; let express_number = ''; let sender_address = ''; let courier_code = ''
       this.select_order = this.total_order
-      if(this.queryList.courier_code != ''){
+      if (this.queryList.courier_code != '') {
         courier_code = this.queryList.courier_code
-        this.select_order = this.select_order.filter(function(select_order){
-            return select_order.courierCode.includes(courier_code)
-          })
+        this.select_order = this.select_order.filter(function(select_order) {
+          return select_order.courierCode.includes(courier_code)
+        })
       }
       if (this.queryList.express_number != '') {
         express_number = this.queryList.express_number
@@ -210,7 +210,7 @@ export default {
           return select_order.recipientName.includes(recipient_name)
         })
       }
-      
+
       // console.log(this.total_order)
       this.pages.totalData = this.select_order.length
       this.view_order = this.select_order.slice(0, this.pages.pageSize)

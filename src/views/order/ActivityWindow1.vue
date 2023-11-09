@@ -52,49 +52,49 @@
           <el-input v-model="form.expressNumber" readonly required />
         </el-form-item>
         <el-form-item label="订单时间" label-width="100px">
-          <el-input v-model="form.createOrder"  readonly />
+          <el-input v-model="form.createOrder" readonly />
         </el-form-item>
       </div>
       <div style="display:flex;justify-content: space-between;">
         <el-form-item label="寄件人">
-          <el-input v-model="form.senderName"  required />
+          <el-input v-model="form.senderName" required />
         </el-form-item>
         <el-form-item label="寄件人号码" label-width="100px">
-          <el-input v-model="form.senderPhone"  />
+          <el-input v-model="form.senderPhone" />
         </el-form-item>
       </div>
-      
+
       <div style="display:flex;justify-content: space-between;">
-        <el-form-item label="收件人" >
-          <el-input v-model="form.recipientName"  />
+        <el-form-item label="收件人">
+          <el-input v-model="form.recipientName" />
         </el-form-item>
-        <el-form-item label="收件人电话"  label-width="100px">
-          <el-input v-model="form.recipientPhone"  />
+        <el-form-item label="收件人电话" label-width="100px">
+          <el-input v-model="form.recipientPhone" />
         </el-form-item>
       </div>
       <div style="display:flex;justify-content: space-between;">
         <el-form-item label="快递员编号" label-width="90px">
-          <el-input v-model="form.courierCode"  />
+          <el-input v-model="form.courierCode" />
         </el-form-item>
-        <el-form-item label="快递员姓名"  label-width="100px">
-          <el-input v-model="form.courierName"  />
+        <el-form-item label="快递员姓名" label-width="100px">
+          <el-input v-model="form.courierName" />
         </el-form-item>
       </div>
       <div style="display:flex;justify-content: space-between;">
         <el-form-item label="快递状态">
-          <el-input v-model="form.status"  />
+          <el-input v-model="form.status" />
         </el-form-item>
         <el-form-item label="运费">
-          <el-input v-model="form.expressCost"  />
-      </el-form-item>
+          <el-input v-model="form.expressCost" />
+        </el-form-item>
       </div>
       <el-form-item label="寄件地址">
-        <el-input v-model="form.senderAddress"  />
+        <el-input v-model="form.senderAddress" />
       </el-form-item>
       <el-form-item label="收件地址">
-        <el-input v-model="form.recipientAddress"  />
+        <el-input v-model="form.recipientAddress" />
       </el-form-item>
-      
+
     </el-form>
 
   </div>
@@ -129,10 +129,10 @@ export default {
         recipientPhone: '',
         recipientAddress: '',
         expressCost: '',
-        courierCode:'',
-        courierName:'',
-        createOrder:'',
-        status:''
+        courierCode: '',
+        courierName: '',
+        createOrder: '',
+        status: ''
       }
     }
   },
@@ -150,7 +150,7 @@ export default {
   methods: {
     fromData() {
       return this.form
-    },
+    }
     // changeProvince(val) {
     //   this.provinceList.forEach((province, index) => {
     //     debugger

@@ -52,7 +52,7 @@
           <el-input v-model="form.expressNumber" readonly required />
         </el-form-item>
         <el-form-item label="订单时间" label-width="100px">
-          <el-input v-model="form.createOrder"  readonly />
+          <el-input v-model="form.createOrder" readonly />
         </el-form-item>
       </div>
       <div style="display:flex;justify-content: space-between;">
@@ -63,12 +63,12 @@
           <el-input v-model="form.senderPhone" readonly />
         </el-form-item>
       </div>
-      
+
       <div style="display:flex;justify-content: space-between;">
-        <el-form-item label="收件人" >
+        <el-form-item label="收件人">
           <el-input v-model="form.recipientName" readonly />
         </el-form-item>
-        <el-form-item label="收件人电话"  label-width="100px">
+        <el-form-item label="收件人电话" label-width="100px">
           <el-input v-model="form.recipientPhone" readonly />
         </el-form-item>
       </div>
@@ -76,7 +76,7 @@
         <el-form-item label="快递员编号" label-width="90px">
           <el-input v-model="form.courierCode" readonly />
         </el-form-item>
-        <el-form-item label="快递员姓名"  label-width="100px">
+        <el-form-item label="快递员姓名" label-width="100px">
           <el-input v-model="form.courierName" readonly />
         </el-form-item>
       </div>
@@ -86,7 +86,7 @@
         </el-form-item>
         <el-form-item label="运费">
           <el-input v-model="form.expressCost" readonly />
-      </el-form-item>
+        </el-form-item>
       </div>
       <el-form-item label="寄件地址">
         <el-input v-model="form.senderAddress" readonly />
@@ -94,7 +94,7 @@
       <el-form-item label="收件地址">
         <el-input v-model="form.recipientAddress" readonly />
       </el-form-item>
-      
+
     </el-form>
 
   </div>
@@ -129,10 +129,10 @@ export default {
         recipientPhone: '',
         recipientAddress: '',
         expressCost: '',
-        courierCode:'',
-        courierName:'',
-        createOrder:'',
-        status:''
+        courierCode: '',
+        courierName: '',
+        createOrder: '',
+        status: ''
       }
     }
   },
@@ -150,7 +150,7 @@ export default {
   methods: {
     fromData() {
       return this.form
-    },
+    }
     // changeProvince(val) {
     //   this.provinceList.forEach((province, index) => {
     //     debugger
