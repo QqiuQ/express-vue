@@ -287,7 +287,7 @@ export default {
   },
   created() {
     // this.resetRowUser()
-    window.alert("loginAccountId: " + this.$store.getters.accountId)
+    // window.alert("loginAccountId: " + this.$store.getters.accountId)
 
     this.onQuery(this.user)
   },
