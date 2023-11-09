@@ -1,17 +1,14 @@
 <template>
   <div class="dashboard-container">
-    <component :is="currentRole" />
+    <img src="../../assets/images/wujing2.jpg" alt="绳之以法" width="100%">
   </div>
 </template>
 
 <script>
 import { mapGetters } from 'vuex'
-import adminDashboard from './admin'
-import editorDashboard from './editor'
 
 export default {
   name: 'Dashboard',
-  components: { adminDashboard, editorDashboard },
   data() {
     return {
       currentRole: 'adminDashboard'

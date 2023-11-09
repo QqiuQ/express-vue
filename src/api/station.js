@@ -1,5 +1,4 @@
 import request from '@/utils/request'
-import axios from 'axios'
 // 按照页码和页大小获取用户列表
 
 export function queryList() {

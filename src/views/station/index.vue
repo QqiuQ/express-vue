@@ -87,7 +87,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import ActivityWindow from './ActivityWindow'
 import { queryList, addStation, editStation, deleteoneStation, deletemanyStation } from '@/api/station'
 export default {
@@ -155,7 +154,7 @@ export default {
     },
     delete_one(index, row) {
       deleteoneStation(this.view_station[index].id).then(response => {
-        if (response.data == '删除失败') {
+        if (response.data === '删除失败') {
           alert('删除失败')
         } else {
           this.select_station = response.data
@@ -172,6 +171,7 @@ export default {
     },
     hasEmptyValues(obj) {
       for (const key in obj) {
+        // eslint-disable-next-line no-prototype-builtins
         if (obj.hasOwnProperty(key)) {
           if (obj[key] === null || obj[key] === undefined || obj[key] === '') {
             return true // 存在空值
@@ -235,31 +235,31 @@ export default {
       //       return select_station.id == id
       //     })
       // }
-      if (this.queryList.province != '') {
+      if (this.queryList.province !== '') {
         province = this.queryList.province
         this.select_station = this.select_station.filter(function(select_station) {
           return select_station.province.includes(province)
         })
       }
-      if (this.queryList.city != '') {
+      if (this.queryList.city !== '') {
         city = this.queryList.city
         this.select_station = this.select_station.filter(function(select_station) {
           return select_station.city.includes(city)
         })
       }
-      if (this.queryList.country != '') {
+      if (this.queryList.country !== '') {
         country = this.queryList.country
         this.select_station = this.select_station.filter(function(select_station) {
           return select_station.country.includes(country)
         })
       }
-      if (this.queryList.phone != '') {
+      if (this.queryList.phone !== '') {
         phone = this.queryList.phone
         this.select_station = this.select_station.filter(function(select_station) {
           return select_station.phone.includes(phone)
         })
       }
-      if (this.queryList.street != '') {
+      if (this.queryList.street !== '') {
         street = this.queryList.street
         this.select_station = this.select_station.filter(function(select_station) {
           return select_station.street.includes(street)
