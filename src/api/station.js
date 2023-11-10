@@ -1,5 +1,52 @@
 import request from '@/utils/request'
-// 按照页码和页大小获取用户列表
+
+export function removeStationAdmin(id) {
+  return request({
+    url: '/station/employee/delete',
+    method: 'post',
+    params: {
+      id: id
+    }
+  })
+}
+
+export function addStationAdmin(stationId, employeeId) {
+  return request({
+    url: '/station/admins/add',
+    method: 'post',
+    params: {
+      stationId: stationId,
+      employeeId: employeeId
+    }
+  })
+}
+
+export function unAvailableStationEmployee(stationId) {
+  return request({
+    url: '/station/admins/unavailable',
+    method: 'get',
+    params: {
+      stationId: stationId
+    }
+  })
+}
+
+export function availableEmployees() {
+  return request({
+    url: '/station/admins/available',
+    method: 'get'
+  })
+}
+
+export function queryAdmins(stationId) {
+  return request({
+    url: '/station/admins',
+    method: 'get',
+    params: {
+      stationId: stationId
+    }
+  })
+}
 
 export function queryList() {
   return request({
@@ -16,6 +63,7 @@ export function addStation(station) {
     data: station
   })
 }
+
 export function editStation(station) {
   return request({
     url: '/station/edit',
@@ -24,6 +72,7 @@ export function editStation(station) {
     data: station
   })
 }
+
 export function deleteoneStation(id) {
   return request({
     url: '/station/deleteone',
@@ -32,6 +81,7 @@ export function deleteoneStation(id) {
     data: id
   })
 }
+
 export function deletemanyStation(ids) {
   return request({
     url: '/station/deletemany',
@@ -40,6 +90,7 @@ export function deletemanyStation(ids) {
     data: ids
   })
 }
+
 // export function queryUsers(pageParams, user) {
 //   return request({
 //     url: '/user/query',

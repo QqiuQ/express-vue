@@ -1,6 +1,6 @@
 <template>
   <div>
-    <el-container>
+    <el-container style="margin: 20px">
       <el-form :inline="true" :model=" queryList" label-width="68px">
         <el-form-item label="省" prop="province">
           <el-input v-model=" queryList.province" placeholder="请输入省" clearable @input="SearchEvent"/>
@@ -81,7 +81,7 @@
     >
       <div style="margin: 20px;">
         <el-row>
-          <el-button primary>新增</el-button>
+          <el-button primary @click="onOpenAddAdminDialog">新增</el-button>
         </el-row>
 
         <el-table :data="adminList" style="width: 100%" max-height="500">
@@ -106,7 +106,7 @@
           </el-table-column>
           <el-table-column fixed="right" label="操作" width="120">
             <template slot-scope="scope">
-              <el-button type="text" size="small" @click.native.prevent="onOpenDeleteDialog(scope.$index)">
+              <el-button type="text" size="small" @click.native.prevent="onOpenRemoveDialog(scope.row)">
                 撤销
               </el-button>
             </template>
@@ -114,6 +114,94 @@
         </el-table>
       </div>
     </el-drawer>
+
+    <el-dialog
+      title="是否撤销该网点管理员"
+      :visible.sync="removeDialogVisible"
+      width="40%"
+      :before-close="handleRemoveDialogClose"
+    >
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="removeDialogVisible = false">取 消</el-button>
+    <el-button type="primary" @click="removeAdminConfirm">确 定</el-button>
+  </span>
+    </el-dialog>
+
+    <el-dialog
+      title="提示"
+      :visible.sync="addAdminDialogVisible"
+      width="80%"
+      :before-close="handleAddAdminDialogClose"
+    >
+
+      <el-row>
+        <el-form :inline="true" :model="queryEmployee" class="demo-form-inline">
+          <el-form-item label="用户名">
+            <el-input v-model="queryEmployee.username" placeholder="用户名" clearable @input="filterEmployees"/>
+          </el-form-item>
+          <el-form-item label="姓名">
+            <el-input v-model="queryEmployee.name" placeholder="姓名" clearable @input="filterEmployees"/>
+          </el-form-item>
+          <el-form-item label="工号">
+            <el-input v-model="queryEmployee.code" placeholder="工号" clearable @input="filterEmployees"/>
+          </el-form-item>
+          <el-form-item label="邮箱">
+            <el-input v-model="queryEmployee.email" placeholder="邮箱" clearable @input="filterEmployees"/>
+          </el-form-item>
+          <el-form-item label="手机号">
+            <el-input v-model="queryEmployee.phone" placeholder="手机号" clearable @input="filterEmployees"/>
+          </el-form-item>
+          <el-form-item label="员工状态">
+            <el-select
+              v-model="queryEmployee.status"
+              clearable
+              placeholder="请选择"
+              @change="onStatusChanged"
+            >
+              <el-option
+                v-for="item in statusOptions"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
+          <el-checkbox v-model="queryEmployee.available" label="仅可用" border @change="filterEmployees"></el-checkbox>
+        </el-form>
+      </el-row>
+
+
+      <el-table :data="filterList" style="width: 100%" max-height="500">
+        <el-table-column fixed prop="username" label="用户名"/>
+        <el-table-column fixed prop="code" label="工号"/>
+        <el-table-column fixed prop="name" label="姓名"/>
+        <el-table-column fixed prop="sex" label="性别">
+          <template slot-scope="scope">
+            <el-tag :type="sexTagColor[scope.row.sex]" close-transition>{{ sexTag[scope.row.sex] }}</el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column fixed prop="email" label="邮箱"/>
+        <el-table-column fixed prop="phone" label="手机号"/>
+        <el-table-column fixed prop="status" label="员工状态">
+          <template slot-scope="scope">
+            <el-tag
+              :type="accountStatusTagColor[scope.row.status]"
+              close-transition
+            >{{ statusTag[scope.row.status] }}
+            </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column fixed="right" label="操作" width="120">
+          <template slot-scope="scope">
+            <el-button type="text" size="small" @click.native.prevent="addCurAdmin(scope.row)">
+              添加
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+
+
+    </el-dialog>
 
 
     <el-footer>
@@ -129,7 +217,18 @@
 
 <script>
 import ActivityWindow from './ActivityWindow'
-import { queryList, addStation, editStation, deleteoneStation, deletemanyStation } from '@/api/station'
+import {
+  queryList,
+  addStation,
+  editStation,
+  deleteoneStation,
+  deletemanyStation,
+  queryAdmins,
+  availableEmployees,
+  unAvailableStationEmployee,
+  addStationAdmin,
+  removeStationAdmin
+} from '@/api/station'
 
 export default {
   // import引入组件才能使用
@@ -140,6 +239,26 @@ export default {
   props: {},
   data() {
     return {
+      removeEmpId: null,
+      removeDialogVisible: false,
+      statusOptions: [
+        { value: 0, label: '在职' },
+        { value: 1, label: '离职' },
+        { value: 2, label: '休假' }
+      ],
+      unavailableIdSet: null,
+      queryEmployee: {
+        name: '',
+        code: '',
+        phone: '',
+        username: '',
+        email: '',
+        status: '',
+        available: ''
+      },
+      employeeList: null, //  普通员工
+      filterList: null, // 过滤
+      addAdminDialogVisible: false,
       stationId: null,
       accountStatusTag: {
         0: '正常',
@@ -194,7 +313,10 @@ export default {
         managerPhone: ''
       },
       parentData: [],
-      multipleSelection: []
+      multipleSelection: [],
+      test: {
+        hhh: 'sdfsdfdsfa'
+      }
     }
   },
   // 计算属性
@@ -203,6 +325,7 @@ export default {
   watch: {},
   // 生命周期，创建完成时（可以访问当前this实例）
   created() {
+
   },
   // 生命周期：挂载完成时（可以访问DOM元素）
   mounted() {
@@ -210,8 +333,128 @@ export default {
   },
   // 方法集合
   methods: {
-    onQueryAdmins() {
+    handleRemoveDialogClose() {
+      this.removeDialogVisible = false
+    },
+    removeAdminConfirm() {
+      console.log(this.removeEmpId)
+      removeStationAdmin(this.removeEmpId).then(res => {
+        this.$message({
+          message: '撤销成功', type: 'success'
+        })
+        this.removeEmpId = null
+        this.onQueryAdmins()
+        this.removeDialogVisible = false
+      })
+    },
+    onOpenRemoveDialog(row) {
+      this.removeDialogVisible = true
+      this.removeEmpId = row.employeeId
+    },
+    addCurAdmin(row) {
+      console.log(row)
+      addStationAdmin(this.stationId, row.id).then(res => {
+        this.$message({
+          message: '添加成功', type: 'success'
+        })
+        this.onQueryAvailableAdmins()
+        this.onQueryAdmins()
+      })
+    },
+    getUnavailableIds() {
+      unAvailableStationEmployee(this.stationId).then(res => {
+        let seList = res.data
+        // console.log(seList)
+        this.unavailableIdSet = new Set()
+        for (let i = 0; i < seList.length; i++) {
+          // console.log(seList[i].employeeId)
+          this.unavailableIdSet.add(seList[i].employeeId)
+        }
+        // console.log(this.unavailableIdSet)
+      })
+    },
+    onStatusChanged(val) {
+      this.queryEmployee.status = val
+      this.filterEmployees()
+    },
+    filterEmployees() {
+      this.filterList = this.employeeList
+      let username = '', code = '', email = '', phone = '', status = '', name = ''
 
+      if (this.queryEmployee.username !== '') {
+        username = this.queryEmployee.username
+        this.filterList = this.filterList.filter(function(item) {
+          return item.username && item.username.includes(username)
+        })
+      }
+
+      if (this.queryEmployee.code !== '') {
+        code = this.queryEmployee.code
+        this.filterList = this.filterList.filter(function(item) {
+          return item.code && item.code.includes(code)
+        })
+      }
+
+      if (this.queryEmployee.email !== '') {
+        email = this.queryEmployee.email
+        this.filterList = this.filterList.filter(function(item) {
+          return item.email && item.email.includes(email)
+        })
+      }
+
+      if (this.queryEmployee.phone !== '') {
+        phone = this.queryEmployee.phone
+        this.filterList = this.filterList.filter(function(item) {
+          return item.phone && item.phone.includes(phone)
+        })
+      }
+      if (this.queryEmployee.name !== '') {
+        name = this.queryEmployee.name
+        this.filterList = this.filterList.filter(function(item) {
+          return item.name && item.name.includes(name)
+        })
+      }
+
+      if (this.queryEmployee.status !== '') {
+        status = this.queryEmployee.status
+        this.filterList = this.filterList.filter(function(item) {
+          return item.status === status
+        })
+      }
+      let unSet = new Set()
+      // console.log(this.queryEmployee.available)
+      // console.log(this.unavailableIdSet)
+      if (this.queryEmployee.available) {
+        //仅查看可用
+        unSet = this.unavailableIdSet
+        this.filterList = this.filterList.filter(function(item) {
+          return !unSet.has(item.id)
+        })
+      }
+
+    },
+    handleAddAdminDialogClose() {
+      this.addAdminDialogVisible = false
+    },
+    onQueryAvailableAdmins() {
+      // 获取普通员工列表
+      availableEmployees().then(res => {
+        this.employeeList = res.data
+        this.filterList = this.employeeList
+      })
+      // 获取不可用的Ids
+      this.getUnavailableIds()
+    },
+    onOpenAddAdminDialog() {
+      // 打开添加管理员窗口
+      this.addAdminDialogVisible = true
+      this.onQueryAvailableAdmins()
+    },
+    onQueryAdmins() {
+      // 根据stationId查找管理员
+      queryAdmins(this.stationId).then(res => {
+        this.adminList = res.data
+      })
     },
     handleAdminDrawerColse() {
       this.adminDrawerVisible = false
@@ -220,6 +463,8 @@ export default {
     onOpenAdminDrawer(row) {
       this.adminDrawerVisible = true
       this.stationId = row.id
+      // console.log(row)
+      this.onQueryAdmins()
     },
 ///////////////////////////////////////
     handleCurrentChange(val) {

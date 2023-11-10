@@ -295,9 +295,9 @@ export const asyncRoutes = [
       {
         path: 'index',
         component: () => import('@/views/station/index'),
-        name: '站点管理',
+        name: '网点管理',
         meta: {
-          title: 'station',
+          title: '网点管理',
           icon: 'theme',
           roles: ['ROLE_SUPER_ADMIN']
         }
