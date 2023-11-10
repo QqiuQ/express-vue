@@ -23,15 +23,71 @@
     <el-drawer title="角色所含员工" :visible.sync="employeeDialogVisible" direction="ltr" size="90%"
                :before-close="handleEmployeeDialogColse"
     >
-      <el-row>
-        Search
-      </el-row>
       <div style="margin: 20px;">
-        <el-table :data="employeeList" style="width: 100%" max-height="500">
+        <el-row>
+          <el-form :inline="true" :model="queryEmployee" class="demo-form-inline">
+            <el-row>
+              <el-form-item label="用户名">
+                <el-input v-model="queryEmployee.username" placeholder="用户名" clearable @input="filterEmployeeList"/>
+              </el-form-item>
+              <el-form-item label="姓名">
+                <el-input v-model="queryEmployee.name" placeholder="姓名" clearable @input="filterEmployeeList"/>
+              </el-form-item>
+              <el-form-item label="手机号">
+                <el-input v-model="queryEmployee.phone" placeholder="手机号" clearable @input="filterEmployeeList"/>
+              </el-form-item>
+              <el-form-item label="邮箱">
+                <el-input v-model="queryEmployee.email" placeholder="邮箱" clearable @input="filterEmployeeList"/>
+              </el-form-item>
+            </el-row>
+            <el-row>
+              <el-form-item label="工号">
+                <el-input v-model="queryEmployee.code" placeholder="工号" clearable @input="filterEmployeeList"/>
+              </el-form-item>
+              <el-form-item label="账户状态">
+                <el-select
+                  v-model="queryEmployee.accountStatus"
+                  clearable
+                  placeholder="请选择"
+                  @change="onAccountStatusChanged"
+                >
+                  <el-option
+                    v-for="item in accountStatusOptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </el-form-item>
+              <el-form-item label="员工状态">
+                <el-select
+                  v-model="queryEmployee.status"
+                  clearable
+                  placeholder="请选择"
+                  @change="onStatusChanged"
+                >
+                  <el-option
+                    v-for="item in statusOptions"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-row>
+
+
+          </el-form>
+        </el-row>
+        <el-table :data="filterList" style="width: 100%" max-height="500">
           <el-table-column fixed prop="username" label="用户名"/>
+          <el-table-column fixed prop="name" label="姓名"/>
           <el-table-column fixed prop="code" label="工号"/>
-          <
-          <el-table-column fixed prop="phone" label="手机号"/>
+          <el-table-column fixed prop="phone" label="手机号">
+            <!--            <template slot-scope="scope">-->
+            <!--              {{ scope.row.phone || queryEmployee.phone}}-->
+            <!--            </template>-->
+          </el-table-column>
           <el-table-column fixed prop="email" label="邮箱"/>
           <el-table-column fixed prop="status" label="员工状态">
             <template slot-scope="scope">
@@ -75,10 +131,10 @@
     <el-dialog
       title="变更角色"
       :visible.sync="roleChangeDialogVisible"
-      width="30%"
+      width="25%"
       :before-close="handleRoleChangeClose"
     >
-      <span>当前角色:
+      <span>
           <el-tag :type="roleTagColorDict[this.curRoleCode]" close-transition>{{ roleDict[this.curRoleCode] }}</el-tag>
         <i class="el-icon-right"/>
       </span>
@@ -102,6 +158,26 @@ export default {
   data() {
 
     return {
+      filterList: null,
+      accountStatusOptions: [
+        { value: 0, label: '正常' },
+        { value: 1, label: '封禁' },
+        { value: 2, label: '注销' }],
+      statusOptions: [
+        { value: 0, label: '在职' },
+        { value: 1, label: '离职' },
+        { value: 2, label: '休假' }
+      ],
+      queryEmployee: {
+        name: '',
+        code: '',
+        phone: '',
+        username: '',
+        email: '',
+        accountStatus: '',
+        lastLoginTime: '',
+        status: ''
+      },
       openRoleId: null,
       curEmpId: null,
       curRoleId: null,
@@ -144,6 +220,75 @@ export default {
     this.onQuery()
   },
   methods: {
+    resetQuery() {
+      this.queryEmployee.username = ''
+      this.queryEmployee.name = ''
+      this.queryEmployee.code = ''
+      this.queryEmployee.email = ''
+      this.queryEmployee.phone = ''
+      this.queryEmployee.accountStatus = ''
+      this.queryEmployee.status = ''
+    },
+    filterEmployeeList() {
+      let username = '', name = '', phone = '', email = '', code = '', accountStatus = '', status = ''
+      console.log('start filter')
+      this.filterList = this.employeeList
+      if (this.queryEmployee.username !== '') {
+        username = this.queryEmployee.username
+        this.filterList = this.filterList.filter(function(employee) {
+          return employee.username && employee.username.includes(username)
+        })
+      }
+
+      if (this.queryEmployee.name !== '') {
+        name = this.queryEmployee.name
+        this.filterList = this.filterList.filter(function(employee) {
+          return employee.name && employee.name.includes(name)
+        })
+      }
+
+      if (this.queryEmployee.phone !== '') {
+        phone = this.queryEmployee.phone
+        this.filterList = this.filterList.filter(function(employee) {
+          return employee.phone && employee.phone.includes(phone)
+        })
+      }
+
+      if (this.queryEmployee.email !== '') {
+        email = this.queryEmployee.email
+        this.filterList = this.filterList.filter(function(employee) {
+          return employee.email && employee.email.includes(email)
+        })
+      }
+
+      if (this.queryEmployee.code !== '') {
+        code = this.queryEmployee.code
+        this.filterList = this.filterList.filter(function(employee) {
+          return employee.code && employee.code.includes(code)
+        })
+      }
+
+      if (this.queryEmployee.accountStatus !== '') {
+        accountStatus = this.queryEmployee.accountStatus
+        this.filterList = this.filterList.filter(function(employee) {
+          return employee.accountStatus == accountStatus
+        })
+      }
+      if (this.queryEmployee.status !== '') {
+        status = this.queryEmployee.status
+        this.filterList = this.filterList.filter(function(employee) {
+          return employee.status == status
+        })
+      }
+    },
+    onAccountStatusChanged(val) {
+      this.queryEmployee.accountStatus = val
+      this.filterEmployeeList()
+    },
+    onStatusChanged(val) {
+      this.queryEmployee.status = val
+      this.filterEmployeeList()
+    },
     resetRoleChange() {
       this.curRoleId = null
       this.curRoleCode = null
@@ -151,12 +296,15 @@ export default {
     },
     onRoleChange(val) {
       this.newRoleId = val
+      console.log(val)
     },
     handleRoleChangeConfirm() {
       console.log(this.newRoleId)
       console.log(this.curRoleId)
       console.log(this.curEmpId)
-      if (this.newRoleId == this.curRoleId) {
+      if (this.newRoleId == null || this.newRoleId == '' || this.newRoleId == undefined) {
+        window.alert('请选择角色')
+      } else if (this.newRoleId == this.curRoleId) {
         window.alert('该员工已是该角色')
       } else {
         // 更改该员工角色
@@ -170,6 +318,7 @@ export default {
     onOpenEmployeeDrawer(row) {
       this.employeeDialogVisible = true
       this.openRoleId = row.id
+      this.resetQuery()
       this.onQueryEmployees()
     },
     handleRoleChangeClose() {
@@ -187,6 +336,8 @@ export default {
     onQueryEmployees() {
       queryEmployeeByRoleId(this.openRoleId).then(res => {
         this.employeeList = res.data
+        // this.filterList = this.employeeList
+        this.filterEmployeeList()
       })
     },
     onQuery() {
