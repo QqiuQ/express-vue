@@ -12,6 +12,7 @@ import chartsRouter from './modules/charts'
 import tableRouter from './modules/table'
 import nestedRouter from './modules/nested'
 import employeeRouter from './modules/employee' // 员工管理路由
+import roleRouter from './modules/role' // 员工管理路由
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -227,6 +228,7 @@ export const constantRoutes = [
 export const asyncRoutes = [
   // 员工管理动态路由
   employeeRouter,
+  roleRouter,
 
   {
     path: '/permission',
