@@ -177,37 +177,37 @@ export default {
       if (this.queryList.courier_code != '') {
         courier_code = this.queryList.courier_code
         this.select_order = this.select_order.filter(function(select_order) {
-          return select_order.courierCode.includes(courier_code)
+          return select_order.courierCode && select_order.courierCode.includes(courier_code)
         })
       }
       if (this.queryList.express_number != '') {
         express_number = this.queryList.express_number
         this.select_order = this.select_order.filter(function(select_order) {
-          return select_order.expressNumber.includes(express_number)
+          return select_order.expressNumber.includes(express_number) && select_order.expressNumber
         })
       }
       if (this.queryList.sender_name != '') {
         sender_name = this.queryList.sender_name
         this.select_order = this.select_order.filter(function(select_order) {
-          return select_order.senderName.includes(sender_name)
+          return select_order.senderName.includes(sender_name) && select_order.senderName
         })
       }
       if (this.queryList.sender_address != '') {
         sender_address = this.queryList.sender_address
         this.select_order = this.select_order.filter(function(select_order) {
-          return select_order.senderAddress.includes(sender_address)
+          return select_order.senderAddress.includes(sender_address) && select_order.senderAddress
         })
       }
       if (this.queryList.recipient_address != '') {
         recipient_address = this.queryList.recipient_address
         this.select_order = this.select_order.filter(function(select_order) {
-          return select_order.recipientAddress.includes(recipient_address)
+          return select_order.recipientAddress.includes(recipient_address) && select_order.recipientAddress
         })
       }
       if (this.queryList.recipient_name != '') {
         recipient_name = this.queryList.recipient_name
         this.select_order = this.select_order.filter(function(select_order) {
-          return select_order.recipientName.includes(recipient_name)
+          return select_order.recipientName.includes(recipient_name) && select_order.recipientName
         })
       }
 

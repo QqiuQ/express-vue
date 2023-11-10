@@ -269,7 +269,40 @@ export const asyncRoutes = [
       }
     ]
   },
+  {
+    path: '/delivery',
+    component: Layout,
+    redirect: '/delivery/collect',
+    alwaysShow: true, // will always show the root menu
+    name: 'delivery',
+    meta: {
+      title: '快递管理',
+      icon: 'lock',
+      // roles: ['ROLE_SUPER_ADMIN', 'ROLE_USER'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'collect',
+        component: () => import('@/views/delivery/collect'),
+        name: 'deliverycollect',
+        meta: {
+          title: '快递揽收',
+          roles: ['ROLE_DELIVERY_MAN','ROLE_SUPER_ADMIN'] // or you can only set roles in sub nav
+        }
+      },
+      {
+        path: 'place',
+        component: () => import('@/views/delivery/place'),
+        name: 'deliveryplace',
+        meta: {
+          title: '快递派送',
+          roles: ['ROLE_DELIVERY_MAN','ROLE_SUPER_ADMIN','ROLE_EMPLOYEE']
+          // if do not set roles, means: this page does not require permission
+        }
+      },
 
+    ]
+  },
   {
     path: '/icon',
     component: Layout,
