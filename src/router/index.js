@@ -90,8 +90,8 @@ export const constantRoutes = [
       {
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
-        name: 'Dashboard',
-        meta: { title: 'Dashboard', icon: 'dashboard', affix: true }
+        name: '寄了么党建',
+        meta: { title: '寄了么党建', icon: 'dashboard', affix: true }
       }
     ]
   },
@@ -160,7 +160,7 @@ export const constantRoutes = [
       }
     ]
   },
-//用户管理路由
+  // 用户管理路由
   {
     path: '/user', // 路由路径
     component: Layout,
@@ -298,6 +298,23 @@ export const asyncRoutes = [
         name: '站点管理',
         meta: {
           title: 'station',
+          icon: 'theme',
+          roles: ['ROLE_SUPER_ADMIN']
+        }
+      }
+    ]
+  },
+
+  {
+    path: '/station/delivery',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/station/stationRelatedDelivery'),
+        name: '相关快递',
+        meta: {
+          title: '站点快递',
           icon: 'theme',
           roles: ['ROLE_SUPER_ADMIN']
         }

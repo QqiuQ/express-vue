@@ -40,6 +40,11 @@ export function deletemanyStation(ids) {
     data: ids
   })
 }
+
+export function getAllRelatedDelivery() {
+  return ''
+}
+
 // export function queryUsers(pageParams, user) {
 //   return request({
 //     url: '/user/query',
