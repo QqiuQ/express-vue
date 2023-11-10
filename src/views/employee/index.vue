@@ -1,0 +1,461 @@
+<template>
+  <div class="app-container">
+    <div class="filter-container">
+      <el-form :inline="true" :model="queryEmployee" class="demo-form-inline">
+        <el-form-item label="用户名">
+          <el-input v-model="queryEmployee.username" placeholder="用户名" clearable/>
+        </el-form-item>
+        <el-form-item label="姓名">
+          <el-input v-model="queryEmployee.name" placeholder="姓名" clearable/>
+        </el-form-item>
+        <el-form-item label="工号">
+          <el-input v-model="queryEmployee.code" placeholder="工号" clearable/>
+        </el-form-item>
+        <el-form-item label="邮箱">
+          <el-input v-model="queryEmployee.email" placeholder="邮箱" clearable/>
+        </el-form-item>
+        <el-form-item label="手机号">
+          <el-input v-model="queryEmployee.phone" placeholder="手机号" clearable/>
+        </el-form-item>
+        <el-form-item label="住址">
+          <el-input v-model="queryEmployee.address" placeholder="住址" clearable/>
+        </el-form-item>
+        <el-form-item label="性别">
+          <el-select v-model="queryEmployee.sex" clearable placeholder="请选择" @change="onSexChanged">
+            <el-option v-for="item in sexOptions" :key="item.value" :label="item.label" :value="item.value"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="账户状态">
+          <el-select
+            v-model="queryEmployee.accountStatus"
+            clearable
+            placeholder="请选择"
+            @change="onAccountStatusChanged"
+          >
+            <el-option
+              v-for="item in accountStatusOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="员工状态">
+          <el-select
+            v-model="queryEmployee.status"
+            clearable
+            placeholder="请选择"
+            @change="onStatusChanged"
+          >
+            <el-option
+              v-for="item in statusOptions"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+
+        <el-form-item>
+          <el-button type="primary" @click="onQuery">查询</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
+
+    <el-table :data="pageList" style="width: 100%" max-height="500">
+      <el-table-column fixed prop="avatar" label="头像"/>
+      <el-table-column fixed prop="username" label="用户名"/>
+      <el-table-column fixed prop="code" label="工号"/>
+      <el-table-column fixed prop="name" label="姓名"/>
+      <el-table-column fixed prop="sex" label="性别">
+        <template slot-scope="scope">
+          <el-tag :type="sexTagColor[scope.row.sex]" close-transition>{{ sexTag[scope.row.sex] }}</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column fixed prop="email" label="邮箱"/>
+      <el-table-column fixed prop="phone" label="手机号"/>
+      <el-table-column fixed prop="accountStatus" label="账户状态">
+        <template slot-scope="scope">
+          <el-tag
+            :type="accountStatusTagColor[scope.row.accountStatus]"
+            close-transition
+          >{{ accountStatusTag[scope.row.accountStatus] }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column fixed prop="status" label="员工状态">
+        <template slot-scope="scope">
+          <el-tag
+            :type="accountStatusTagColor[scope.row.status]"
+            close-transition
+          >{{ statusTag[scope.row.status] }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column fixed prop="address" label="住址"/>
+
+      <el-table-column fixed prop="hireDate" label="入职日期"/>
+
+      <el-table-column fixed prop="lastLoginTime" label="上次登录时间"/>
+
+
+      <el-table-column fixed="right" label="操作" width="120">
+        <template slot-scope="scope">
+          <el-button type="text" size="small" @click.native.prevent="onOpenDetailDrawer(scope.$index)">
+            详情
+          </el-button>
+          <el-button type="text" size="small" @click.native.prevent="onOpenEditDialog(scope.$index)">
+            修改
+          </el-button>
+          <el-button type="text" size="small" @click.native.prevent="onOpenDeleteDialog(scope.$index)">
+            删除
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
+    <el-footer style="margin-top: 40px;">
+      <el-row type="flex" justify="center" align="middle">
+        <el-pagination
+          :current-page="currentPage"
+          :page-sizes="[5, 10, 20, 30, 40, 50]"
+          :page-size="pageLimit"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="totalRecords"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+        />
+      </el-row>
+    </el-footer>
+
+    <!-- detail drawer -->
+    <el-drawer title="员工详情" :visible.sync="detailDrawerVisible" direction="ltr" size="50%">
+      <el-row type="flex" justify="center" align="middle">
+        <el-avatar
+          :size="120"
+          src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+        />
+
+        <!-- <el-avatar src="rowData.avatar"></el-avatar> -->
+      </el-row>
+      <el-divider></el-divider>
+      <el-descriptions class="margin-top" title="个人信息" :column="3" :size="medium" border>
+        <el-descriptions-item>
+          <template slot="label">
+            <i class="el-icon-user"></i>
+            用户名
+          </template>
+          kooriookami
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            <i class="el-icon-user"></i>
+            用户名
+          </template>
+          kooriookami
+        </el-descriptions-item>
+        <el-descriptions-item>
+          <template slot="label">
+            <i class="el-icon-user"></i>
+            用户名
+          </template>
+          kooriookami
+        </el-descriptions-item>
+      </el-descriptions>
+    </el-drawer>
+
+    <!-- edit dialog -->
+    <el-dialog title="修改用户" :visible.sync="editDialogVisible" width="80%">
+
+      <el-form v-model="rowData" label-width="80px">
+        <el-row type="flex" justify="center" align="middle" style="margin-bottom: 20px;">
+          <el-avatar
+            :size="100"
+            src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+          />
+          <!-- <el-avatar src="rowData.avatar"></el-avatar> -->
+        </el-row>
+        <el-divider></el-divider>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="用户名">
+              <el-input v-model="rowData.username" disabled/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="工号">
+              <el-input v-model="rowData.code" disabled/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+
+          <el-col :span="12">
+            <el-form-item label="姓名">
+              <el-input v-model="rowData.name"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="性别">
+              <el-select v-model="rowData.sex" clearable placeholder="请选择" @change="onEditSexChange">
+                <el-option v-for="item in sexOptions" :key="item.value" :label="item.label" :value="item.value"/>
+              </el-select>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="邮箱">
+              <el-input v-model="rowData.email"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="手机号">
+              <el-input v-model="rowData.phone"/>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="账户状态">
+              <el-radio-group v-model="rowData.accountStatus">
+                <el-radio-button label="0">正常</el-radio-button>
+                <el-radio-button label="1">封禁</el-radio-button>
+                <el-radio-button label="2">注销</el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="员工状态">
+              <el-radio-group v-model="rowData.status">
+                <el-radio-button label="0">在岗</el-radio-button>
+                <el-radio-button label="1">离职</el-radio-button>
+                <el-radio-button label="2">休假</el-radio-button>
+              </el-radio-group>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-form-item label="家庭住址">
+          <el-input v-model="rowData.address"/>
+        </el-form-item>
+        <el-form-item label="入职日期">
+          <el-date-picker v-model="rowData.hireDate" type="date" placeholder="入职日期"/>
+        </el-form-item>
+
+        <el-row type="flex" justify="end" align="middle">
+          <el-button type="primary" round @click="onEditSave">保存</el-button>
+        </el-row>
+      </el-form>
+    </el-dialog>
+
+    <!-- delete dialog -->
+    <el-dialog title="确认是否删除" :visible.sync="deleteDialogVisible" width="50%">
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="deleteDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="onDeleteConfirm">确 定</el-button>
+      </span>
+    </el-dialog>
+  </div>
+
+</template>
+<script>
+import { deleteUser, queryUser } from '@/api/user2'
+import { queryList, editEmployee, deleteEmployee } from '@/api/employee'
+
+export default {
+
+  data() {
+    // 日期格式化
+    // const dataFormater = new DateFormat("yyyy-MM-dd")
+    // eslint-disable-next-line no-extend-native
+    Date.prototype.format = function(fmt) {
+      var o = {
+        'M+': this.getMonth() + 1, // 月份
+        'd+': this.getDate(), // 日
+        'h+': this.getHours(), // 小时
+        'm+': this.getMinutes(), // 分
+        's+': this.getSeconds(), // 秒
+        'q+': Math.floor((this.getMonth() + 3) / 3), // 季度
+        'S': this.getMilliseconds() // 毫秒
+      }
+      if (/(y+)/.test(fmt)) {
+        fmt = fmt.replace(RegExp.$1, (this.getFullYear() + '').substr(4 - RegExp.$1.length))
+      }
+      for (const k in o) {
+        if (new RegExp('(' + k + ')').test(fmt)) {
+          fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)))
+        }
+      }
+      return fmt
+    }
+    return {
+      detailDrawerVisible: false,
+      deleteDialogVisible: false,
+      editDialogVisible: false,
+      accountStatusOptions: [
+        { value: 0, label: '正常' },
+        { value: 1, label: '封禁' },
+        { value: 2, label: '注销' }],
+      statusOptions: [
+        { value: 0, label: '在职' },
+        { value: 1, label: '离职' },
+        { value: 2, label: '休假' }
+      ],
+      sexOptions: [
+        { value: 0, label: '女' },
+        { value: 1, label: '男' },
+        { value: 2, label: '未知' }
+      ],
+      listLoading: false,
+      employeeList: null, // 总List
+      pageList: null, // 分页List
+      totalRecords: 0, // employeeList总记录
+      currentPage: 1, // 当前页
+      pageLimit: 5, // 页大小
+      queryEmployee: {
+        name: null,
+        code: null,
+        sex: null,
+        phone: null,
+        username: null,
+        email: null,
+        accountStatus: null,
+        lastLoginTime: null,
+        status: null,
+        hireDate: null,
+        address: null
+      },
+      rowData: {
+        username: null,
+        nickname: null,
+        email: null,
+        phone: null,
+        birthday: null,
+        sex: null,
+        accountStatus: null
+      },
+      tmpRowData: null,
+      rowDataIdx: null,
+      accountStatusTag: {
+        0: '正常',
+        1: '封禁',
+        2: '注销'
+      },
+      statusTag: {
+        0: '在职',
+        1: '离职',
+        2: '休假'
+      },
+      accountStatusTagColor: {
+        0: 'success',
+        1: 'danger',
+        2: 'info'
+      },
+      sexTag: {
+        0: '女',
+        1: '男',
+        2: '未知'
+      },
+      sexTagColor: {
+        0: 'danger',
+        1: 'primary',
+        2: 'info'
+      }
+    }
+  },
+  created() {
+    this.onQuery()
+  },
+  methods: {
+
+    onOpenDetailDrawer(index) {
+      this.detailDrawerVisible = true
+      const idx = this.getRowDataIndex(index)
+      this.rowData = this.employeeList[idx]
+    },
+    getRowDataIndex(rowIndex) { // 获取该页数据在employeeList的索引
+      return rowIndex + (this.currentPage - 1) * this.pageLimit
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+      this.showPageList(this.currentPage, this.pageLimit)
+    },
+    handleSizeChange(val) {
+      this.pageLimit = val
+      this.showPageList(this.currentPage, this.pageLimit)
+    },
+    showPageList(page, limit) {
+      if (this.employeeList != null) {
+        const start = (this.currentPage - 1) * this.pageLimit
+        this.pageList = this.employeeList.slice(start, start + this.pageLimit)
+      }
+    },
+    filterAccountStatusTag(val, row) {
+      return row.accountStatus === val
+    },
+
+    onDeleteConfirm() {
+      // console.log(this.rowDataIdx)
+      // console.log(this.employeeList[this.rowDataIdx])
+      deleteEmployee(this.employeeList[this.rowDataIdx].id).then(response => {
+        this.deleteDialogVisible = false
+        this.onQuery()
+      })
+      this.rowDataIdx = null
+    },
+    onOpenDeleteDialog(index) {
+      this.deleteDialogVisible = true
+      this.rowDataIdx = this.getRowDataIndex(index)
+    },
+
+    onEditSave() {
+      // 编辑保存按钮
+      editEmployee(this.rowData).then(response => {
+        this.$message('修改成功')
+        this.editDialogVisible = false
+        this.onQuery()  // 重新读取
+      })
+    },
+    onEditSexChange(val) {
+      // eslint-disable-next-line no-undef
+      if ($.isEmptyObject(this.rowData)) {
+        this.rowData.sex = val
+      }
+    },
+    onOpenEditDialog(index) {
+      const idx = this.getRowDataIndex(index)
+      this.editDialogVisible = true
+
+      // this.tmpRowData =
+      this.rowData = JSON.parse(JSON.stringify(this.employeeList[idx]))
+    },
+    // 员工查询
+    onQuery() {
+      queryList(this.queryEmployee).then(response => {
+        this.employeeList = response.data
+        this.totalRecords = this.employeeList.length
+        this.showPageList(this.currentPage, this.pageLimit)
+      })
+    },
+    onQueryOneUser(id) {
+      queryUser(id).then(res => {
+        this.detailUser = res.data
+        console.log(res.data)
+        console.log(this.detailUser)
+      })
+    },
+    onSexChanged(val) {
+      this.queryEmployee.sex = val
+    },
+    onAccountStatusChanged(val) {
+      this.queryEmployee.accountStatus = val
+    },
+    onStatusChanged(val) {
+      this.queryEmployee.status = val
+    }
+
+  }
+}
+</script>

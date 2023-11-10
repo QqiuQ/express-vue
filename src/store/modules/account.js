@@ -63,8 +63,8 @@ const actions = {
 
   // get user info
   getInfo({ commit, state }) {
-    console.log('state.accountType: ' + state.accountType)
-    console.log('state.token: ' + state.token)
+    // console.log('state.accountType: ' + state.accountType)
+    // console.log('state.token: ' + state.token)
 
     return new Promise((resolve, reject) => {
       // 根据 api 中的getInfo接口获取账户信息
