@@ -3,22 +3,22 @@
     <el-container>
       <el-form :inline="true" :model=" queryList" label-width="68px">
         <el-form-item label="省" prop="province">
-          <el-input v-model=" queryList.province" placeholder="请输入省" clearable @input="SearchEvent" />
+          <el-input v-model=" queryList.province" placeholder="请输入省" clearable @input="SearchEvent"/>
         </el-form-item>
         <el-form-item label="市" prop="city">
-          <el-input v-model=" queryList.city" placeholder="请输入市" clearable @input="SearchEvent" />
+          <el-input v-model=" queryList.city" placeholder="请输入市" clearable @input="SearchEvent"/>
         </el-form-item>
         <el-form-item label="县" prop="country">
-          <el-input v-model=" queryList.country" placeholder="请输入县" clearable @input="SearchEvent" />
+          <el-input v-model=" queryList.country" placeholder="请输入县" clearable @input="SearchEvent"/>
         </el-form-item>
         <el-form-item label="街道">
-          <el-input v-model=" queryList.street" placeholder="街道" clearable @input="SearchEvent" />
+          <el-input v-model=" queryList.street" placeholder="街道" clearable @input="SearchEvent"/>
         </el-form-item>
         <el-form-item label="电话">
-          <el-input v-model=" queryList.phone" placeholder="电话" clearable @input="SearchEvent" />
+          <el-input v-model=" queryList.phone" placeholder="电话" clearable @input="SearchEvent"/>
         </el-form-item>
         <el-form-item label="驿站名称">
-          <el-input v-model=" queryList.station_name" placeholder="驿站名称" clearable @input="SearchEvent" />
+          <el-input v-model=" queryList.station_name" placeholder="驿站名称" clearable @input="SearchEvent"/>
         </el-form-item>
         <el-form-item>
           <el-button size="mini" type="primary" @click="addInfo()">增加网点</el-button>
@@ -28,34 +28,34 @@
       </el-form>
     </el-container>
     <el-dialog :visible.sync="windowVisible" :append-to-body="true">
-      <ActivityWindow v-if="windowVisible" ref="popWindow" :child-prop="parentData" />
+      <ActivityWindow v-if="windowVisible" ref="popWindow" :child-prop="parentData"/>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="add_station">提交</el-button>
         <el-button @click="windowVisible = false">取消</el-button>
       </span>
     </el-dialog>
     <el-dialog :visible.sync="windowVisible_edit" :append-to-body="true">
-      <ActivityWindow v-if="windowVisible_edit" ref="popWindow" :child-prop="parentData" />
+      <ActivityWindow v-if="windowVisible_edit" ref="popWindow" :child-prop="parentData"/>
       <span slot="footer" class="dialog-footer">
         <el-button type="submit" @click="edit_station">提交</el-button>
         <el-button @click="windowVisible_edit = false">取消</el-button>
       </span>
     </el-dialog>
     <el-table ref="multipleTable" :data="view_station" style="width: 100%" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" />
-      <el-table-column label="省" prop="province" />
-      <el-table-column label="市" prop="city" />
-      <el-table-column label="县" prop="country" />
-      <el-table-column label="街道" prop="street" />
-      <el-table-column label="电话" prop="phone" />
-      <el-table-column label="驿站名称" prop="stationName" />
-      <el-table-column label="管理员" prop="stationManager" />
-      <el-table-column label="管理员电话" prop="managerPhone" />
+      <el-table-column type="selection" width="55"/>
+      <el-table-column label="省" prop="province"/>
+      <el-table-column label="市" prop="city"/>
+      <el-table-column label="县" prop="country"/>
+      <el-table-column label="街道" prop="street"/>
+      <el-table-column label="电话" prop="phone"/>
+      <el-table-column label="驿站名称" prop="stationName"/>
+      <el-table-column label="管理员" prop="stationManager"/>
+      <el-table-column label="管理员电话" prop="managerPhone"/>
       <el-table-column label="操作">
         <template slot-scope="scope">
-          <!-- <el-button @click.native.prevent="onOpenDetailDrawer(scope.$index)" type="text" size="small">
-                详情
-            </el-button> -->
+          <el-button @click.native.prevent="onOpenAdminDrawer(scope.row)" type="text" size="small">
+            管理员
+          </el-button>
           <el-button type="text" size="small" @click="handleEdit(scope.$index, scope.$row)">
             修改
           </el-button>
@@ -63,18 +63,59 @@
             删除
           </el-button>
         </template>
-      <!-- <template v-slot="scope">
-          <el-button
-          size="small"
-          @click="handleEdit(scope.$index, scope.$row)">Edit</el-button>
-          <el-button
-          size="small"
-          type="danger"
-          @click="delete_one(scope.$index, scope.$row)">Delete</el-button>
+        <!-- <template v-slot="scope">
+            <el-button
+            size="small"
+            @click="handleEdit(scope.$index, scope.$row)">Edit</el-button>
+            <el-button
+            size="small"
+            type="danger"
+            @click="delete_one(scope.$index, scope.$row)">Delete</el-button>
 
-      </template> -->
+        </template> -->
       </el-table-column>
     </el-table>
+
+    <el-drawer title="网点管理员" :visible.sync="adminDrawerVisible" direction="ltr" size="90%"
+               :before-close="handleAdminDrawerColse"
+    >
+      <div style="margin: 20px;">
+        <el-row>
+          <el-button primary>新增</el-button>
+        </el-row>
+
+        <el-table :data="adminList" style="width: 100%" max-height="500">
+          <el-table-column fixed prop="username" label="用户名"/>
+          <el-table-column fixed prop="code" label="工号"/>
+          <el-table-column fixed prop="name" label="姓名"/>
+          <el-table-column fixed prop="sex" label="性别">
+            <template slot-scope="scope">
+              <el-tag :type="sexTagColor[scope.row.sex]" close-transition>{{ sexTag[scope.row.sex] }}</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column fixed prop="email" label="邮箱"/>
+          <el-table-column fixed prop="phone" label="手机号"/>
+          <el-table-column fixed prop="status" label="员工状态">
+            <template slot-scope="scope">
+              <el-tag
+                :type="accountStatusTagColor[scope.row.status]"
+                close-transition
+              >{{ statusTag[scope.row.status] }}
+              </el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column fixed="right" label="操作" width="120">
+            <template slot-scope="scope">
+              <el-button type="text" size="small" @click.native.prevent="onOpenDeleteDialog(scope.$index)">
+                撤销
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+    </el-drawer>
+
+
     <el-footer>
       <el-pagination
         :page-size="pages.pageSize"
@@ -89,6 +130,7 @@
 <script>
 import ActivityWindow from './ActivityWindow'
 import { queryList, addStation, editStation, deleteoneStation, deletemanyStation } from '@/api/station'
+
 export default {
   // import引入组件才能使用
 
@@ -98,6 +140,35 @@ export default {
   props: {},
   data() {
     return {
+      stationId: null,
+      accountStatusTag: {
+        0: '正常',
+        1: '封禁',
+        2: '注销'
+      },
+      statusTag: {
+        0: '在职',
+        1: '离职',
+        2: '休假'
+      },
+      accountStatusTagColor: {
+        0: 'success',
+        1: 'danger',
+        2: 'info'
+      },
+      sexTag: {
+        0: '女',
+        1: '男',
+        2: '未知'
+      },
+      sexTagColor: {
+        0: 'danger',
+        1: 'primary',
+        2: 'info'
+      },
+      adminList: null,
+      adminDrawerVisible: false,
+//////////////////////////////////////
       windowVisible: false,
       addOperate: false,
       windowVisible_edit: false,
@@ -139,6 +210,18 @@ export default {
   },
   // 方法集合
   methods: {
+    onQueryAdmins() {
+
+    },
+    handleAdminDrawerColse() {
+      this.adminDrawerVisible = false
+    },
+    // 管理员列表
+    onOpenAdminDrawer(row) {
+      this.adminDrawerVisible = true
+      this.stationId = row.id
+    },
+///////////////////////////////////////
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`)
       this.pages.currentPage = val
@@ -227,7 +310,11 @@ export default {
       })
     },
     SearchEvent() {
-      let phone = ''; let street = ''; let city = ''; let province = ''; let country = ''
+      let phone = ''
+      let street = ''
+      let city = ''
+      let province = ''
+      let country = ''
       this.select_station = this.total_station
       // if(this. queryList.id != ""){
       //   id = this. queryList.id
