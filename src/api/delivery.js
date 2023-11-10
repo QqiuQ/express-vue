@@ -20,6 +20,16 @@ export function receiveConfirm(id) {
   })
 }
 
+export function sendCancel(id) {
+  return request({
+    url: '/delivery/cancel',
+    method: 'post',
+    params: {
+      id: id
+    }
+  })
+}
+
 export function getDelivery(id) {
   return request({
     url: '/delivery',
@@ -27,6 +37,25 @@ export function getDelivery(id) {
     params: {
       id: id
     }
+  })
+}
+
+export function querySend(phone) {
+  return request({
+    url: '/delivery/send',
+    method: 'get',
+    params: {
+      phone: phone
+    }
+  })
+}
+
+export function order(order) {
+  return request({
+    url: '/delivery/add',
+    method: 'post',
+    jsonData: true,
+    data: order
   })
 }
 
