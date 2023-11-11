@@ -109,6 +109,22 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/deliveryStation',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/deliveryStation/index'),
+        name: '快递站点管理',
+        meta: {
+          title: '快递网点_员工管理',
+          icon: 'theme',
+          // roles: ['ROLE_SUPER_ADMIN']
+        }
+      }
+    ]
+  },
+  {
     path: '/sent',
     component: Layout,
     redirect: '/sent/index',
@@ -269,7 +285,40 @@ export const asyncRoutes = [
       }
     ]
   },
+  {
+    path: '/delivery',
+    component: Layout,
+    redirect: '/delivery/collect',
+    alwaysShow: true, // will always show the root menu
+    name: 'delivery',
+    meta: {
+      title: '快递管理',
+      icon: 'lock',
+      // roles: ['ROLE_SUPER_ADMIN', 'ROLE_USER'] // you can set roles in root nav
+    },
+    children: [
+      {
+        path: 'collect',
+        component: () => import('@/views/delivery/collect'),
+        name: 'deliverycollect',
+        meta: {
+          title: '快递揽收',
+          roles: ['ROLE_DELIVERY_MAN','ROLE_SUPER_ADMIN'] // or you can only set roles in sub nav
+        }
+      },
+      {
+        path: 'place',
+        component: () => import('@/views/delivery/place'),
+        name: 'deliveryplace',
+        meta: {
+          title: '快递派送',
+          roles: ['ROLE_DELIVERY_MAN','ROLE_SUPER_ADMIN','ROLE_EMPLOYEE']
+          // if do not set roles, means: this page does not require permission
+        }
+      },
 
+    ]
+  },
   {
     path: '/icon',
     component: Layout,
@@ -442,43 +491,56 @@ export const asyncRoutes = [
     ]
   },
 
+  // {
+  //   path: '/zip',
+  //   component: Layout,
+  //   redirect: '/zip/download',
+  //   alwaysShow: true,
+  //   name: 'Zip',
+  //   meta: { title: 'Zip', icon: 'zip' },
+  //   children: [
+  //     {
+  //       path: 'download',
+  //       component: () => import('@/views/zip/index'),
+  //       name: 'ExportZip',
+  //       meta: { title: 'Export Zip' }
+  //     }
+  //   ]
+  // },
   {
-    path: '/zip',
+    path: '/order',
     component: Layout,
-    redirect: '/zip/download',
-    alwaysShow: true,
-    name: 'Zip',
-    meta: { title: 'Zip', icon: 'zip' },
-    children: [
-      {
-        path: 'download',
-        component: () => import('@/views/zip/index'),
-        name: 'ExportZip',
-        meta: { title: 'Export Zip' }
-      }
-    ]
-  },
-  {
-    path: '/pdf',
-    component: Layout,
-    redirect: '/pdf/index',
     children: [
       {
         path: 'index',
-        component: () => import('@/views/pdf/index'),
-        name: 'PDF',
-        meta: { title: 'PDF', icon: 'pdf' }
+        component: () => import('@/views/order/index'),
+        name: 'order',
+        meta: { title: '订单管理', icon: 'pdf' }
       }
     ]
   },
 
-  {
-    path: '/pdf/download',
-    component: () => import('@/views/pdf/download'),
-    hidden: true
-  },
 
   {
+    path: '/station',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/station/index'),
+        name: 'station',
+        meta: { title: '网点管理', icon: 'theme' }
+      }
+    ]
+  },
+
+
+
+
+
+
+  {
+
     path: '/clipboard',
     component: Layout,
     children: [
