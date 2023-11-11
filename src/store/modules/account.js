@@ -43,7 +43,7 @@ const actions = {
     commit('SET_ACCOUNT_TYPE', accountType)
     // 将username与accountType拼接
     // 方便实现后端的双表登录
-    let usernameAndType = username.trim() + '#' + accountType
+    const usernameAndType = username.trim() + '#' + accountType
     // console.log('usernameAndType: ' + usernameAndType)
     return new Promise((resolve, reject) => {
       login({ username: usernameAndType, password: password }).then(response => {

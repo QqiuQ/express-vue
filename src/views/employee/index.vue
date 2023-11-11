@@ -413,7 +413,9 @@ export default {
     onEditSave() {
       // 编辑保存按钮
       editEmployee(this.rowData).then(response => {
-        this.$message('修改成功')
+        this.$message({
+          message: '修改成功', type: 'success'
+        })
         this.editDialogVisible = false
         this.onQuery()  // 重新读取
       })
