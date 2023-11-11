@@ -3,20 +3,20 @@
     <div class="filter-container">
       <el-form :inline="true" :model="user" class="demo-form-inline">
         <el-form-item label="用户名">
-          <el-input v-model="user.username" placeholder="用户名" clearable/>
+          <el-input v-model="user.username" placeholder="用户名" clearable />
         </el-form-item>
         <el-form-item label="昵称">
-          <el-input v-model="user.nickname" placeholder="昵称" clearable/>
+          <el-input v-model="user.nickname" placeholder="昵称" clearable />
         </el-form-item>
         <el-form-item label="邮箱">
-          <el-input v-model="user.email" placeholder="邮箱" clearable/>
+          <el-input v-model="user.email" placeholder="邮箱" clearable />
         </el-form-item>
         <el-form-item label="手机号">
-          <el-input v-model="user.phone" placeholder="手机号" clearable/>
+          <el-input v-model="user.phone" placeholder="手机号" clearable />
         </el-form-item>
         <el-form-item label="性别">
           <el-select v-model="user.sex" clearable placeholder="请选择" @change="onSexChanged">
-            <el-option v-for="item in sexOptions" :key="item.value" :label="item.label" :value="item.value"/>
+            <el-option v-for="item in sexOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
         <el-form-item label="账户状态">
@@ -42,18 +42,18 @@
     </div>
 
     <el-table :data="pageList" style="width: 100%" max-height="500">
-      <el-table-column fixed prop="username" label="用户名"/>
-      <el-table-column fixed prop="nickname" label="昵称"/>
-      <el-table-column fixed prop="avatar" label="头像"/>
+      <el-table-column fixed prop="username" label="用户名" />
+      <el-table-column fixed prop="nickname" label="昵称" />
+      <el-table-column fixed prop="avatar" label="头像" />
       <el-table-column fixed prop="sex" label="性别">
         <template slot-scope="scope">
           <el-tag :type="sexTagColor[scope.row.sex]" close-transition>{{ sexTag[scope.row.sex] }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column fixed prop="email" label="邮箱"/>
-      <el-table-column fixed prop="phone" label="手机号"/>
-      <el-table-column fixed prop="birthday" label="生日"/>
-      <el-table-column fixed prop="lastLoginTime" label="上次登录时间"/>
+      <el-table-column fixed prop="email" label="邮箱" />
+      <el-table-column fixed prop="phone" label="手机号" />
+      <el-table-column fixed prop="birthday" label="生日" />
+      <el-table-column fixed prop="lastLoginTime" label="上次登录时间" />
       <el-table-column fixed prop="accountStatus" label="账户状态">
         <template slot-scope="scope">
           <el-tag
@@ -94,23 +94,90 @@
 
     <!-- detail drawer -->
     <el-drawer title="用户详情" :visible.sync="detailDrawerVisible" :direction="lrt">
-      <div style="padding: 20px; display: flex; flex-direction: column">
-        <div>
-          <span>用户名：</span><span>{{ detailUser.username }}</span>
-        </div>
-        <div>
-          <span>电话：</span><span>{{ detailUser.phone }}</span>
-        </div>
-        <div>
-          <span>生日：</span><span>{{ detailUser.birthday }}</span>
-        </div>
-        <div>
-          <span>创建时间：</span><span>{{ detailUser.createTime }}</span>
-        </div>
-        <div>
-          <span>最后登录时间：</span><span>{{ detailUser.lastLoginTime }}</span>
-        </div>
-      </div>
+      <el-form v-model="detailUser" label-width="80px">
+        <el-row type="flex" justify="center" align="middle" style="margin-bottom: 20px;">
+          <el-avatar
+            :size="100"
+            src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+          />
+          <!-- <el-avatar src="rowUser.avatar"></el-avatar> -->
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="用户名">
+              <el-input v-model="detailUser.username" disabled />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="昵称">
+              <el-input v-model="detailUser.nickname" disabled />
+            </el-form-item>
+          </el-col>
+
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="邮箱">
+              <el-input v-model="detailUser.email" disabled />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="手机号">
+              <el-input v-model="detailUser.phone" disabled />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="性别">
+              <el-input v-model="detailUser.sexString" disabled />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="生日">
+              <el-input v-model="detailUser.birthday" disabled />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="账户状态">
+              <el-input v-model="detailUser.accountStatusString" disabled />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="id">
+              <el-input v-model="detailUser.id" disabled />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="注册时间">
+              <el-input v-model="detailUser.registerTime" disabled />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="创建时间">
+              <el-input v-model="detailUser.createTime" disabled />
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="12">
+            <el-form-item label="更新时间">
+              <el-input v-model="detailUser.updateTime" disabled />
+            </el-form-item>
+          </el-col>
+          <el-col :span="12">
+            <el-form-item label="最后登录时间">
+              <el-input v-model="detailUser.lastLoginTime" disabled />
+            </el-form-item>
+          </el-col>
+        </el-row>
+
+      </el-form>
     </el-drawer>
 
     <!-- edit dialog -->
@@ -127,12 +194,12 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="用户名">
-              <el-input v-model="rowUser.username" disabled/>
+              <el-input v-model="rowUser.username" disabled />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="昵称">
-              <el-input v-model="rowUser.nickname"/>
+              <el-input v-model="rowUser.nickname" />
             </el-form-item>
           </el-col>
 
@@ -140,24 +207,24 @@
         <el-row>
           <el-col :span="12">
             <el-form-item label="邮箱">
-              <el-input v-model="rowUser.email"/>
+              <el-input v-model="rowUser.email" />
             </el-form-item>
           </el-col>
           <el-col :span="12">
             <el-form-item label="手机号">
-              <el-input v-model="rowUser.phone"/>
+              <el-input v-model="rowUser.phone" />
             </el-form-item>
           </el-col>
         </el-row>
 
         <el-form-item label="性别">
           <el-select v-model="rowUser.sex" clearable placeholder="请选择" @change="onEditSexChange">
-            <el-option v-for="item in sexOptions" :key="item.value" :label="item.label" :value="item.value"/>
+            <el-option v-for="item in sexOptions" :key="item.value" :label="item.label" :value="item.value" />
           </el-select>
         </el-form-item>
 
         <el-form-item label="生日">
-          <el-date-picker v-model="rowUser.birthday" type="date" placeholder="选择日期"/>
+          <el-date-picker v-model="rowUser.birthday" type="date" placeholder="选择日期" />
         </el-form-item>
         <el-form-item label="账户状态">
           <el-radio-group v-model="rowUser.accountStatus">
@@ -243,14 +310,22 @@ export default {
         lastLoginTime: null
       },
       detailUser: {
-        username: '',
-        email: '',
+        accountStatus: '',
+        accountStatusString: '',
+        avatar: '',
+        birthday: '',
         createTime: '',
-        updateTime: '',
+        email: '',
+        id: '',
         lastLoginTime: '',
         nickname: '',
+        password: '',
         phone: '',
-        birthday: ''
+        registerTime: '',
+        sex: '',
+        sexString: '',
+        updateTime: '',
+        username: ''
       },
       rowUser: {
         username: null,
@@ -287,18 +362,41 @@ export default {
   },
   created() {
     // this.resetRowUser()
-    // window.alert("loginAccountId: " + this.$store.getters.accountId)
+    // window.alert('loginAccountId: ' + this.$store.getters.accountId)
 
     this.onQuery(this.user)
   },
   methods: {
+    accountStatusToString(id) {
+      switch (id) {
+        case 0 :
+          return '正常'
+        case 1 :
+          return '封禁'
+        case 2 :
+          return '注销'
+        default:
+          return ''
+      }
+    },
+    sexToString(id) {
+      switch (id) {
+        case 0 :
+          return '女'
+        case 1 :
+          return '男'
+        case 2 :
+          return '未知'
+        default:
+          return ''
+      }
+    },
     onOpenDetailDrawer(index) {
-      this.detailDrawerVisible = true
       this.userIdx = this.getRowDataIndex(index)
       this.tmpRowUser = this.userList[this.userIdx]
-      console.log(this.tmpRowUser.id)
-      console.log(this.tmpRowUser)
       this.onQueryOneUser(this.tmpRowUser.id)
+      console.log(this.detailUser.accountStatus)
+      this.detailDrawerVisible = true
     },
     getRowDataIndex(rowIndex) { // 获取该页数据在userList的索引
       return rowIndex + (this.currentPage - 1) * this.pageLimit
@@ -391,6 +489,8 @@ export default {
     onQueryOneUser(id) {
       queryUser(id).then(res => {
         this.detailUser = res.data
+        this.detailUser.accountStatusString = this.accountStatusToString(this.detailUser.accountStatus)
+        this.detailUser.sexString = this.sexToString(this.detailUser.sex)
         console.log(res.data)
         console.log(this.detailUser)
       })

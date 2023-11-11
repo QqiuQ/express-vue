@@ -8,25 +8,28 @@
             <span style="font-size: 16px"> 寄件人</span>
           </div>
           <div style="height: 40px" />
-          <el-form ref="ruleForm" :model="senderForm" :rules="rules" label-width="100px" class="demo-ruleForm">
-            <el-form-item label="姓名" prop="name">
-              <el-input v-model="senderForm.name" placeholder="请填写真实姓名" style="width: 70%" />
+          <el-form ref="ruleForm" :model="detailDelivery" :rules="rules" label-width="100px" class="demo-ruleForm">
+            <el-form-item label="姓名" prop="senderName">
+              <el-input v-model="detailDelivery.senderName" placeholder="请填写寄件人姓名" style="width: 70%" />
             </el-form-item>
-            <el-form-item label="电话" prop="phone">
-              <el-input v-model="senderForm.phone" placeholder="请填写手机号码或固话" style="width: 70%" />
+            <el-form-item label="电话" prop="senderPhone">
+              <el-input v-model="detailDelivery.senderPhone" placeholder="请填写手机号码或固话" style="width: 70%" />
             </el-form-item>
-            <el-form-item label="地区" prop="region">
+            <el-form-item label="地区" prop="senderLocation">
               <el-cascader
-                v-model="senderForm.locationPath"
+                v-model="senderLocationPath"
                 placeholder="请选择地区"
                 size="medium"
                 :options="options"
                 @change="handleSenderChange"
               />
             </el-form-item>
-            <el-form-item label="详细地址" prop="address">
-              <el-input v-model="senderForm.address" placeholder="请填写详细地址" style="width: 70%" />
+            <el-form-item label="详细地址" prop="senderAddress">
+              <el-input v-model="senderStreet" placeholder="请填写详细地址" style="width: 70%" />
             </el-form-item>
+            <div style="display: flex; justify-content: center">
+              <el-button type="primary" style="width: 50%;" @click="resetSender">重 置</el-button>
+            </div>
           </el-form>
         </div>
         <div style="flex: 1; display: flex; justify-content: center; align-items: center">
@@ -38,25 +41,28 @@
             <span style="font-size: 16px"> 收件人</span>
           </div>
           <div style="height: 40px" />
-          <el-form ref="ruleForm" :model="receiverForm" :rules="rules" label-width="100px" class="demo-ruleForm">
-            <el-form-item label="姓名" prop="name">
-              <el-input v-model="receiverForm.name" placeholder="请填写真实姓名" style="width: 70%" />
+          <el-form ref="ruleForm" :model="detailDelivery" :rules="rules" label-width="100px" class="demo-ruleForm">
+            <el-form-item label="姓名" prop="recipientName">
+              <el-input v-model="detailDelivery.recipientName" placeholder="请填写收件人姓名" style="width: 70%" />
             </el-form-item>
-            <el-form-item label="电话" prop="phone">
-              <el-input v-model="receiverForm.phone" placeholder="请填写手机号码或固话" style="width: 70%" />
+            <el-form-item label="电话" prop="recipientPhone">
+              <el-input v-model="detailDelivery.recipientPhone" placeholder="请填写手机号码或固话" style="width: 70%" />
             </el-form-item>
-            <el-form-item label="地区" prop="region">
+            <el-form-item label="地区" prop="receiverLocation">
               <el-cascader
-                v-model="receiverForm.locationPath"
+                v-model="receiverLocationPath"
                 placeholder="请选择地区"
                 size="medium"
                 :options="options"
                 @change="handleReceiverChange"
               />
             </el-form-item>
-            <el-form-item label="详细地址" prop="address">
-              <el-input v-model="receiverForm.address" placeholder="请填写详细地址" style="width: 70%" />
+            <el-form-item label="详细地址" prop="receiverStreet">
+              <el-input v-model="receiverStreet" placeholder="请填写详细地址" style="width: 70%" />
             </el-form-item>
+            <div style="display: flex; justify-content: center">
+              <el-button type="primary" style="width: 50%;" @click="resetReceiver">重 置</el-button>
+            </div>
           </el-form>
         </div>
       </div>
@@ -78,6 +84,7 @@
 
 <script>
 import { regionData, codeToText } from 'element-china-area-data'
+import { order } from '@/api/delivery'
 
 export default {
 
@@ -88,31 +95,55 @@ export default {
       prizeLock: -1,
       prize: '--  ',
       options: regionData,
-      senderForm: {
-        name: '',
-        phone: '',
-        locationPath: '',
-        address: ''
-      },
-      receiverForm: {
-        name: '',
-        phone: '',
-        locationPath: '',
-        address: ''
+      senderLocationPath: [],
+      receiverLocationPath: [],
+      senderStreet: '',
+      receiverStreet: '',
+      detailDelivery: {
+        actualDeliveryTime: '',
+        courierCode: '',
+        courierName: '',
+        courierPhone: '',
+        createTime: '',
+        description: '',
+        estimatedDeliveryTime: '',
+        expressCost: '',
+        expressNumber: '',
+        expressStatus: '',
+        id: '',
+        packageLength: '',
+        packageWeight: '',
+        recipientAddress: '',
+        recipientName: '',
+        recipientPhone: '',
+        recipientSignature: '',
+        remark: '',
+        senderAddress: '',
+        senderName: '',
+        senderPhone: '',
+        status: '',
+        updateTime: ''
       },
       rules: {
-        name: [
+        senderName: [
           { required: true, message: '请输入姓名', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { min: 2, max: 5, message: '长度在 2 到 5 个字符', trigger: 'blur' }
         ],
-        phone: [
+        senderPhone: [
           { required: true, message: '请输入联系方式', trigger: 'blur' }
         ],
-        locationPath: [
+        senderLocationPath: [
           { required: true, message: '请输入寄件地址' }
         ],
-        address: [
-          { required: true, message: '请填写详细地址', trigger: 'blur' }
+        recipientName: [
+          { required: true, message: '请输入姓名', trigger: 'blur' },
+          { min: 2, max: 5, message: '长度在 2 到 5 个字符', trigger: 'blur' }
+        ],
+        recipientPhone: [
+          { required: true, message: '请输入联系方式', trigger: 'blur' }
+        ],
+        receiverLocationPath: [
+          { required: true, message: '请输入寄件地址' }
         ]
       }
     }
@@ -120,30 +151,46 @@ export default {
   methods: {
     handleSenderChange() {
       let senderLoc = ''
-      for (let i = 0; i < this.senderForm.locationPath.length; i++) {
-        senderLoc += codeToText[this.senderForm.locationPath[i]]
+      for (let i = 0; i < this.senderLocationPath.length; i++) {
+        senderLoc += codeToText[this.senderLocationPath[i]]
       }
-      console.log(senderLoc, this.senderForm.locationPath[0])
+      console.log(senderLoc, this.senderLocationPath[0])
+      this.detailDelivery.senderAddress = senderLoc
       this.prizeLock++
       if (this.prizeLock > 0) this.countPrize()
     },
     handleReceiverChange() {
       let receiverLoc = ''
-      for (let i = 0; i < this.receiverForm.locationPath.length; i++) {
-        receiverLoc += codeToText[this.receiverForm.locationPath[i]]
+      for (let i = 0; i < this.receiverLocationPath.length; i++) {
+        receiverLoc += codeToText[this.receiverLocationPath[i]]
       }
-      console.log(receiverLoc, this.receiverForm.locationPath[0])
+      console.log(receiverLoc, this.receiverLocationPath[0])
+      this.detailDelivery.recipientAddress = receiverLoc
       this.prizeLock++
       if (this.prizeLock > 0) this.countPrize()
     },
     countPrize() {
-      const from = this.senderForm.locationPath[0] + this.senderForm.locationPath[1]
-      const to = this.receiverForm.locationPath[0] + this.receiverForm.locationPath[1]
-      this.prize = Math.abs(from - to) / 1000 + 10
+      this.prize = '好多'
       this.buttonDisabled = false
     },
     order() {
+      this.detailDelivery.senderAddress += this.senderStreet
+      this.detailDelivery.recipientAddress += this.receiverStreet
+      order(this.detailDelivery)
+      console.log(this.detailDelivery)
       this.$message.success('下单成功')
+    },
+    resetSender() {
+      this.detailDelivery.senderName = ''
+      this.detailDelivery.senderPhone = ''
+      this.senderLocationPath = []
+      this.senderStreet = ''
+    },
+    resetReceiver() {
+      this.detailDelivery.recipientName = ''
+      this.detailDelivery.recipientPhone = ''
+      this.receiverLocationPath = []
+      this.receiverStreet = ''
     }
   }
 }

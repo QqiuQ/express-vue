@@ -1,8 +1,9 @@
 <template>
   <el-container style="padding: 50px; height: 84vh; display: flex; flex-direction: column">
-    <div>
-      <el-input v-model="queryName" style="width: 200px" placeholder="查询相关信息" />
-      <el-button type="info" @click="reset">重置</el-button>
+    <div style="display: flex; flex-direction: column">
+      <el-input v-model="queryName" style="width: 500px" placeholder="查询相关信息" />
+      <div style="height: 30px" />
+      <el-button type="info" style="width: 500px" @click="reset">重置</el-button>
     </div>
     <div style="height: 40px" />
     <el-table :data="tables">
@@ -16,16 +17,7 @@
           <el-tag :type="statusTagColor[scope.row.status]" close-transition>{{ statusTag[scope.row.status] }}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="操作" align="center" width="180">
-        <template v-slot="scope">
-          <el-button type="text" size="small" @click="onCancelOrder(scope.row)">
-            取消订单
-          </el-button>
-          <el-button type="text" size="small" @click="onDetailDelivery(scope.row)">
-            详情
-          </el-button>
-        </template>
-      </el-table-column>
+      <el-table-column label="操作" align="center" width="180" />
     </el-table>
     <el-footer style="margin-top: 40px;">
       <el-row type="flex" justify="center" align="middle">
@@ -68,21 +60,17 @@
 </template>
 
 <script>
-import { getDelivery, querySend, sendCancel } from '@/api/delivery'
-import { queryUser } from '@/api/user2'
-
+import { getAllRelatedDelivery } from '@/api/station'
 export default {
-  name: 'Sent',
+  name: 'StationRelatedDelivery',
   data() {
     return {
-      totalItem: 0,
-      visibleDetail: false,
-      queryName: '',
       page: 1,
       pageSize: 5,
-      id: '',
-      sender: '',
-      tableData: [],
+      tableData: '',
+      totalItem: 0,
+      queryName: '',
+      visibleDetail: false,
       statusTag: {
         0: '已取消',
         1: '已完成',
@@ -150,34 +138,11 @@ export default {
       return this.tableData.slice(start, start + this.pageSize)
     }
   },
-  created() {
-    this.queryMySent()
-  },
   methods: {
-    queryMySent() {
-      queryUser(this.$store.getters.accountId).then(res => {
-        this.myPhone = res.data.phone
-        querySend(this.myPhone).then(res => {
-          this.tableData = res.data
-          this.totalItem = this.tableData.length
-        })
-      })
-    },
-    onCancelOrder(idx) {
-      if (idx.expressStatus !== 1) {
-        this.$message.error('快递已经送走了，不可以取消噢！')
-      } else {
-        sendCancel(idx.id)
-        idx.expressStatus = 0
-        idx.status = 0
-        this.$message.success('取消成功')
-      }
-    },
-    onDetailDelivery(idx) {
-      getDelivery(idx.id).then(res => {
-        this.detailDelivery = res.data
-        this.visibleDetail = true
-        console.log(res.data)
+    queryAllDelivery() {
+      getAllRelatedDelivery().then(res => {
+        this.tableData = res.data()
+        this.totalItem = this.tableData.length
       })
     },
     handleSizeChange(val) {
