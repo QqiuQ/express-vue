@@ -109,6 +109,22 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '/deliveryStation',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/deliveryStation/index'),
+        name: '快递站点管理',
+        meta: {
+          title: '快递网点_员工管理',
+          icon: 'theme',
+          // roles: ['ROLE_SUPER_ADMIN']
+        }
+      }
+    ]
+  },
+  {
     path: '/sent',
     component: Layout,
     redirect: '/sent/index',
