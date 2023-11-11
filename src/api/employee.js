@@ -18,6 +18,15 @@ export function editEmployee(employee) {
   })
 }
 
+export function addEmployee(employee) {
+  return request({
+    url: '/employee/add',
+    method: 'post',
+    jsonData: true, // request请求发出之前做了一个处理
+    data: employee
+  })
+}
+
 export function deleteEmployee(emp_id) {
   return request({
     url: '/employee/delete',

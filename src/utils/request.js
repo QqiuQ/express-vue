@@ -2,6 +2,7 @@ import axios from 'axios'
 import { MessageBox, Message } from 'element-ui'
 import store from '@/store'
 import { getToken } from '@/utils/auth'
+
 const qs = require('querystring')
 
 // axios.defaults.transformRequest = [function (data) {
@@ -38,12 +39,12 @@ service.interceptors.request.use(
     // 表明后端使用了 @RequestBody
     // 前端传递给后端的是一个 json 对象
     if (config.method.toLocaleLowerCase() === 'post') {
-      // console.log('config.jsonData: ' + config.jsonData)
       if (config.jsonData) {
         config.headers['Content-Type'] = 'application/json;charset=UTF-8'
         // config.params = JSON.stringify(config.params)
-        // config.data = JSON.stringify(config.data)
-        // console.log(config.data)
+      } else if (config.fileData) {
+        config.headers['Content-Type'] = 'multipart/form-data'
+
       } else {
         config.headers['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'
         config.data = qs.stringify(config.data)
@@ -64,7 +65,7 @@ service.interceptors.response.use(
   /**
    * If you want to get http information such as headers or status
    * Please return  response => response
-  */
+   */
 
   /**
    * Determine the request status by custom code
