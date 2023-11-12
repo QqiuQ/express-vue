@@ -55,7 +55,11 @@
             />
           </el-select>
         </el-form-item>
-
+        <el-form-item label="角色">
+          <el-select v-model="queryEmployee.roleName" clearable placeholder="请选择" @change="onRoleChange">
+            <el-option v-for="item in roleOptions" :key="item.value" :label="item.label" :value="item.value"/>
+          </el-select>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="onQuery">查询</el-button>
         </el-form-item>
@@ -68,7 +72,7 @@
     </div>
 
     <el-table :data="pageList" style="width: 100%" max-height="500">
-      <el-table-column fixed prop="avatar" label="头像"/>
+      <!--      <el-table-column fixed prop="avatar" label="头像"/>-->
       <el-table-column fixed prop="username" label="用户名"/>
       <el-table-column fixed prop="code" label="工号"/>
       <el-table-column fixed prop="name" label="姓名"/>
@@ -98,10 +102,17 @@
         </template>
       </el-table-column>
       <el-table-column fixed prop="address" label="住址"/>
+      <el-table-column fixed prop="roleName" label="角色名称">
+        <template slot-scope="scope">
+          <el-tag :type="roleTagColorDict[scope.row.roleName]" close-transition>{{
+              roleDict[scope.row.roleName]
+            }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <!--      <el-table-column fixed prop="hireDate" label="入职日期"/>-->
 
-      <el-table-column fixed prop="hireDate" label="入职日期"/>
-
-      <el-table-column fixed prop="lastLoginTime" label="上次登录时间"/>
+      <!--      <el-table-column fixed prop="lastLoginTime" label="上次登录时间"/>-->
 
 
       <el-table-column fixed="right" label="操作" width="120">
@@ -109,10 +120,14 @@
           <el-button type="text" size="small" @click.native.prevent="onOpenDetailDrawer(scope.$index)">
             详情
           </el-button>
-          <el-button type="text" size="small" @click.native.prevent="onOpenEditDialog(scope.$index)">
+          <el-button v-if="modifyAvailable(scope.row)" type="text" size="small"
+                     @click.native.prevent="onOpenEditDialog(scope.$index)"
+          >
             修改
           </el-button>
-          <el-button type="text" size="small" @click.native.prevent="onOpenDeleteDialog(scope.$index)">
+          <el-button v-if="modifyAvailable(scope.row)" type="text" size="small"
+                     @click.native.prevent="onOpenDeleteDialog(scope.$index)"
+          >
             删除
           </el-button>
         </template>
@@ -136,10 +151,16 @@
     <el-drawer title="员工详情" :visible.sync="detailDrawerVisible" direction="ltr" size="50%">
       <el-row type="flex" justify="center" align="middle">
         <el-avatar
-          :size="120"
+          :size="100"
           src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
         />
         <!-- <el-avatar src="rowData.avatar"></el-avatar> -->
+      </el-row>
+      <el-row  type="flex" justify="center">
+        <el-tag :type="roleTagColorDict[rowData.roleName]" close-transition>{{
+            roleDict[rowData.roleName]
+          }}
+        </el-tag>
       </el-row>
       <el-divider></el-divider>
 
@@ -253,31 +274,38 @@
     <el-dialog title="新增员工" :visible.sync="addDialogVisible" width="80%">
 
       <el-form v-model="newFormData" label-width="80px">
-        <el-row type="flex" justify="center" align="middle" style="margin-bottom: 20px;">
+        <!--        <el-row type="flex" justify="center" align="middle" style="margin-bottom: 20px;">-->
 
-          <!--          <el-upload-->
-          <!--            class="avatar-uploader"-->
-          <!--            action="#"-->
-          <!--            :show-file-list="false"-->
-          <!--            :on-success="handleAvatarSuccess"-->
-          <!--            :before-upload="beforeAvatarUpload"-->
-          <!--            :http-request="handleUploadAvatar"-->
-          <!--          >-->
-          <!--            <img v-if="rowData.avatar" :src="rowData.avatar" class="avatar">-->
-          <!--            <i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
-          <!--          </el-upload>-->
-          <!--          <img src="../../assets/upload/6bd5e119e66841bba621ee4a6b1db576-fzu.jpg" alt="绳之以法" width="100%">-->
+        <!--          <el-upload-->
+        <!--            class="avatar-uploader"-->
+        <!--            action="#"-->
+        <!--            :show-file-list="false"-->
+        <!--            :on-success="handleAvatarSuccess"-->
+        <!--            :before-upload="beforeAvatarUpload"-->
+        <!--            :http-request="handleUploadAvatar"-->
+        <!--          >-->
+        <!--            <img v-if="rowData.avatar" :src="rowData.avatar" class="avatar">-->
+        <!--            <i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
+        <!--          </el-upload>-->
+        <!--          <img src="../../assets/upload/6bd5e119e66841bba621ee4a6b1db576-fzu.jpg" alt="绳之以法" width="100%">-->
 
-          <el-avatar
-            :size="100"
-            src="imageUrl"
-          />
+        <!--          <el-avatar-->
+        <!--            :size="100"-->
+        <!--            src="imageUrl"-->
+        <!--          />-->
 
-          <el-avatar
-            :size="100"
-            src="https://p.qqan.com/up/2021-6/16246735796128385.png"
-          />
-          <!-- <el-avatar src="rowData.avatar"></el-avatar> -->
+        <!--          <el-avatar-->
+        <!--            :size="100"-->
+        <!--            src="https://p.qqan.com/up/2021-6/16246735796128385.png"-->
+        <!--          />-->
+        <!--          &lt;!&ndash; <el-avatar src="rowData.avatar"></el-avatar> &ndash;&gt;-->
+        <!--        </el-row>-->
+        <el-row>
+          <el-form-item label="角色">
+            <el-select v-model="newFormData.roleName" clearable placeholder="请选择" @change="onRoleChange">
+              <el-option v-for="item in roleOptions" :key="item.value" :label="item.label" :value="item.value"/>
+            </el-select>
+          </el-form-item>
         </el-row>
         <el-divider></el-divider>
         <el-row>
@@ -293,9 +321,11 @@
           </el-col>
         </el-row>
         <el-row>
+
           <el-form-item label="密码">
             <el-input v-model=" newFormData.password"/>
           </el-form-item>
+
         </el-row>
         <el-row>
           <el-col :span="12">
@@ -346,8 +376,26 @@
             </el-form-item>
           </el-col>
         </el-row>
-        <el-form-item label="家庭住址">
-          <el-input v-model=" newFormData.address"/>
+        <el-form-item label="片区">
+          <el-col :span="6">
+            <el-cascader
+              placeholder="请选择地区"
+              size="medium"
+              :options="placeOptions"
+              @change="handleRegionChange"
+            />
+
+          </el-col>
+          <!--          <el-button v-if="!showCascadePlace" @click="showCascadePlace=true">-->
+          <!--            <template slot-scope="">-->
+          <!--              {{ this.region }}-->
+          <!--            </template>-->
+          <!--          </el-button>-->
+          <el-col :span="10">
+            <el-input v-model.trim="street" label="街道"/>
+
+          </el-col>
+
         </el-form-item>
         <el-form-item label="入职日期">
           <el-date-picker v-model=" newFormData.hireDate" type="date" placeholder="入职日期"/>
@@ -363,31 +411,38 @@
     <el-dialog title="修改用户" :visible.sync="editDialogVisible" width="80%">
 
       <el-form v-model="rowData" label-width="80px">
-        <el-row type="flex" justify="center" align="middle" style="margin-bottom: 20px;">
+        <!--        <el-row type="flex" justify="center" align="middle" style="margin-bottom: 20px;">-->
 
-          <!--          <el-upload-->
-          <!--            class="avatar-uploader"-->
-          <!--            action="#"-->
-          <!--            :show-file-list="false"-->
-          <!--            :on-success="handleAvatarSuccess"-->
-          <!--            :before-upload="beforeAvatarUpload"-->
-          <!--            :http-request="handleUploadAvatar"-->
-          <!--          >-->
-          <!--            <img v-if="rowData.avatar" :src="rowData.avatar" class="avatar">-->
-          <!--            <i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
-          <!--          </el-upload>-->
-          <!--          <img src="../../assets/upload/6bd5e119e66841bba621ee4a6b1db576-fzu.jpg" alt="绳之以法" width="100%">-->
+        <!--          <el-upload-->
+        <!--            class="avatar-uploader"-->
+        <!--            action="#"-->
+        <!--            :show-file-list="false"-->
+        <!--            :on-success="handleAvatarSuccess"-->
+        <!--            :before-upload="beforeAvatarUpload"-->
+        <!--            :http-request="handleUploadAvatar"-->
+        <!--          >-->
+        <!--            <img v-if="rowData.avatar" :src="rowData.avatar" class="avatar">-->
+        <!--            <i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
+        <!--          </el-upload>-->
+        <!--          <img src="../../assets/upload/6bd5e119e66841bba621ee4a6b1db576-fzu.jpg" alt="绳之以法" width="100%">-->
 
-          <el-avatar
-            :size="100"
-            src="imageUrl"
-          />
+        <!--          <el-avatar-->
+        <!--            :size="100"-->
+        <!--            src="imageUrl"-->
+        <!--          />-->
 
-          <el-avatar
-            :size="100"
-            src="https://p.qqan.com/up/2021-6/16246735796128385.png"
-          />
-          <!-- <el-avatar src="rowData.avatar"></el-avatar> -->
+        <!--          <el-avatar-->
+        <!--            :size="100"-->
+        <!--            src="https://p.qqan.com/up/2021-6/16246735796128385.png"-->
+        <!--          />-->
+        <!-- <el-avatar src="rowData.avatar"></el-avatar> -->
+        <!--        </el-row>-->
+        <el-row>
+          <el-form-item label="角色">
+            <el-select v-model="rowData.roleName" clearable placeholder="请选择" @change="onRoleChange">
+              <el-option v-for="item in roleOptions" :key="item.value" :label="item.label" :value="item.value"/>
+            </el-select>
+          </el-form-item>
         </el-row>
         <el-divider></el-divider>
         <el-row>
@@ -475,8 +530,10 @@
 
 </template>
 <script>
-import { queryList, editEmployee, deleteEmployee, addEmployee } from '@/api/employee'
+import { addEmployee, deleteEmployee, editEmployee, queryList } from '@/api/employee'
 import { uploadAvatar } from '@/api/file'
+import { codeToText, regionData } from 'element-china-area-data'
+import { employeeProfile } from '@/api/profile'
 
 export default {
 
@@ -505,6 +562,25 @@ export default {
       return fmt
     }
     return {
+      placeOptions: regionData,
+      showCascadePlace: false, // 是否显示级联
+      roleOptions: [
+        { value: 'ROLE_SUPER_ADMIN', label: '超级管理员' },
+        { value: 'ROLE_STATION_ADMIN', label: '站点管理员' },
+        { value: 'ROLE_DELIVERY_MAN', label: '快递员' },
+        { value: 'ROLE_EMPLOYEE', label: '普通员工' }],
+      roleDict: {
+        'ROLE_SUPER_ADMIN': '超级管理员',
+        'ROLE_STATION_ADMIN': '站点管理员',
+        'ROLE_DELIVERY_MAN': '快递员',
+        'ROLE_EMPLOYEE': '普通员工'
+      },
+      roleTagColorDict: {
+        'ROLE_SUPER_ADMIN': 'danger',
+        'ROLE_STATION_ADMIN': 'success',
+        'ROLE_DELIVERY_MAN': 'warning',
+        'ROLE_EMPLOYEE': 'primary'
+      },
       imageUrl: encodeURI('../../assets/upload/6bd5e119e66841bba621ee4a6b1db576-fzu.jpg'),
       // imageUrl:'upload/'+encodeURI('avatars/45d7122ca9834c658dbaa3a1a8149337-fzu.jpg'),
       addDialogVisible: false,
@@ -532,6 +608,7 @@ export default {
       currentPage: 1, // 当前页
       pageLimit: 5, // 页大小
       queryEmployee: {
+        roleName: null,
         name: null,
         code: null,
         sex: null,
@@ -545,6 +622,7 @@ export default {
         address: null
       },
       rowData: {
+        roleName: '',
         username: '',
         code: '',
         name: '',
@@ -558,6 +636,7 @@ export default {
         address: ''
       },
       newFormData: {
+        roleName: '',
         username: '',
         code: '',
         name: '',
@@ -595,13 +674,27 @@ export default {
         0: 'danger',
         1: 'primary',
         2: 'info'
-      }
+      },
+      profile: null
     }
   },
   created() {
     this.onQuery()
+    employeeProfile(this.$store.getters.accountId).then(res => {
+      this.profile = res.data
+    })
   },
   methods: {
+    modifyAvailable(row) {
+      // 哪些不能修改
+      if (this.profile.username === 'bobby') {
+        return row.id !== this.profile.id
+      }
+      return row.id !== this.profile.id && row.username !== 'bobby' && row.roleName === 'ROLE_SUPER_ADMIN'
+    },
+    handleRegionChange(val) {
+      this.region = codeToText[val[0]] + '/' + codeToText[val[1]] + '/' + codeToText[val[2]]
+    },
     handleUploadAvatar(param) {
       const formData = new FormData()
       formData.append('file', param.file)
@@ -681,7 +774,6 @@ export default {
     },
 
     onEditSave() {
-
       // 编辑保存按钮
       editEmployee(this.rowData).then(response => {
         this.$message({
@@ -715,6 +807,9 @@ export default {
     },
     onSexChanged(val) {
       this.queryEmployee.sex = val
+    },
+    onRoleChange(val) {
+      this.queryEmployee.roleName = val
     },
     onAccountStatusChanged(val) {
       this.queryEmployee.accountStatus = val

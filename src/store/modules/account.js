@@ -77,6 +77,7 @@ const actions = {
 
         const { roles, name, avatar, introduction } = data
 
+
         // roles must be a non-empty array
         if (!roles || roles.length <= 0) {
           reject('getInfo: roles must be a non-null array!')

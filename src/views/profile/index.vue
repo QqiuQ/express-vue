@@ -65,22 +65,26 @@
               </el-row>
 
               <el-row :gutter="10">
-                <el-col :span="8" v-if="isEmployee">
+                <el-col :span="9" v-if="isEmployee">
                   <el-form-item label="姓名">
                     <el-input v-model.trim="account.name" :disabled="!editable"/>
                   </el-form-item>
                 </el-col>
-                <el-col :span="8" v-else>
+                <el-col :span="9" v-else>
                   <el-form-item label="昵称">
                     <el-input v-model.trim="account.nickname" :disabled="!editable"/>
                   </el-form-item>
                 </el-col>
-                <el-col :span="8">
+                <el-col :span="5">
                   <el-form-item label="性别">
-                    <el-input v-model.trim="account.sex" :disabled="!editable"/>
+                    <el-select v-model="account.sex" clearable placeholder="请选择" @change="onSexChanged"
+                               :disabled="!editable"
+                    >
+                      <el-option v-for="item in sexOptions" :key="item.value" :label="item.label" :value="item.value"/>
+                    </el-select>
                   </el-form-item>
                 </el-col>
-                <el-col :span="8" v-if="isEmployee">
+                <el-col :span="9" v-if="isEmployee">
                   <el-form-item label="入职日期">
                     <el-input v-model.trim="formData.hireDate" :disabled="true"/>
                   </el-form-item>
@@ -104,13 +108,26 @@
                 </el-col>
               </el-row>
 
-              <el-row :gutter="10">
-                <el-col :span="24" v-if="isEmployee">
-                  <el-form-item label="住址">
-                    <el-input v-model.trim="formData.address" :disabled="!editable"/>
-                  </el-form-item>
-                </el-col>
-              </el-row>
+              <el-form-item label="片区" v-if="isEmployee">
+                <el-cascader
+                  placeholder="请选择地区"
+                  size="medium"
+                  :options="placeOptions"
+                  @change="handleRegionChange"
+                  :disabled="!editable"
+                  v-if="showCascadePlace"
+                />
+                <el-button v-if="!showCascadePlace" @click="showCascadePlace=true" :disabled="!editable">
+                  <template slot-scope="">
+                    {{ this.region }}
+                  </template>
+                </el-button>
+
+              </el-form-item>
+              <el-form-item label="街道" v-if="isEmployee">
+                <el-input v-model.trim="street" label="街道" :disabled="!editable"/>
+              </el-form-item>
+
               <el-row :gutter="10">
                 <el-col :span="12" v-if="isEmployee">
                   <el-form-item label="员工状态">
@@ -157,7 +174,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import { employeeProfile, userProfile, userProfileUpdate, employeeProfileUpdate } from '@/api/profile'
+import { codeToText, regionData } from 'element-china-area-data'
+import { employeeProfile, employeeProfileUpdate, userProfile, userProfileUpdate } from '@/api/profile'
 import UserCard from './components/UserCard'
 import Activity from './components/Activity'
 import Timeline from './components/Timeline'
@@ -168,6 +186,15 @@ export default {
   components: { UserCard, Activity, Timeline, Account },
   data() {
     return {
+      showCascadePlace: false, // 是否显示级联
+      sexOptions: [
+        { value: 0, label: '女' },
+        { value: 1, label: '男' },
+        { value: 2, label: '未知' }
+      ],
+      region: '',
+      street: '',
+      placeOptions: regionData,
       formData: null,
       editable: false,
       user: {},
@@ -204,8 +231,15 @@ export default {
     this.getProfile()
   },
   methods: {
+    onSexChanged(val) {
+      this.account.sex = val
+    },
+    handleRegionChange(val) {
+      this.region = codeToText[val[0]] + '/' + codeToText[val[1]] + '/' + codeToText[val[2]]
+    },
     onChangeSave(data) {
       if (this.isEmployee()) {
+        data.address = this.region + '/' + this.street
         return employeeProfileUpdate(data)
       } else {
         return userProfileUpdate(data)
@@ -230,6 +264,15 @@ export default {
         employeeProfile(this.$store.getters.accountId).then(res => {
           this.account = res.data
           this.formData = JSON.parse(JSON.stringify(this.account))
+          let start = this.formData.address.lastIndexOf('/')
+          this.street = this.formData.address.substring(start + 1)
+          this.region = this.formData.address.substring(0, start)
+          if (this.region == null || this.region == undefined || this.region == '') {
+            this.showCascadePlace = true
+          } else {
+            this.showCascadePlace = false
+          }
+          console.log('region:' + this.region)
         })
       } else {
         userProfile(this.$store.getters.accountId).then(res => {

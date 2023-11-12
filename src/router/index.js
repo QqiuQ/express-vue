@@ -12,7 +12,8 @@ import chartsRouter from './modules/charts'
 import tableRouter from './modules/table'
 import nestedRouter from './modules/nested'
 import employeeRouter from './modules/employee' // 员工管理路由
-import roleRouter from './modules/role' // 员工管理路由
+import roleRouter from './modules/role'
+import courierRouter from '@/router/modules/courier' // 员工管理路由
 
 /**
  * Note: sub-menu only appear when route children.length >= 1
@@ -96,130 +97,32 @@ export const constantRoutes = [
       }
     ]
   },
-  {
-    path: '/send',
-    component: Layout,
-    redirect: '/send/index',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/user/send'),
-        name: '我要寄件',
-        meta: { title: '我要寄件', icon: 'skill', roles: ['ROLE_SUPER_ADMIN', 'ROLE_USER'] }
-      }
-    ]
-  },
-  {
-    path: '/deliveryStation',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/deliveryStation/index'),
-        name: '快递站点管理',
-        meta: {
-          title: '快递网点_员工管理',
-          icon: 'theme',
-          // roles: ['ROLE_SUPER_ADMIN']
-        }
-      }
-    ]
-  },
-  {
-    path: '/sent',
-    component: Layout,
-    redirect: '/sent/index',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/user/sent'),
-        name: '我寄的',
-        meta: { title: '我寄的', icon: 'skill', roles: ['ROLE_SUPER_ADMIN', 'ROLE_USER'] }
-      }
-    ]
-  },
-  {
-    path: '/received',
-    component: Layout,
-    redirect: '/received/index',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/user/received'),
-        name: '我收的',
-        meta: { title: '我收的', icon: 'skill', roles: ['ROLE_SUPER_ADMIN', 'ROLE_USER'] }
-      }
-    ]
-  },
-  {
-    path: '/addressBooks',
-    component: Layout,
-    redirect: '/addressBooks/index',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/user/addressBooks'),
-        name: '地址簿',
-        meta: { title: '地址簿', icon: 'skill', roles: ['ROLE_SUPER_ADMIN', 'ROLE_USER'] }
-      }
-    ]
-  },
-  {
-    path: '/locationEnquiry',
-    component: Layout,
-    redirect: '/locationEnquiry/index',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/user/locationEnquiry'),
-        name: '网点查询',
-        meta: { title: '网点查询', icon: 'skill', roles: ['ROLE_SUPER_ADMIN', 'ROLE_USER'] }
-      }
-    ]
-  },
-  // 用户管理路由
-  {
-    path: '/user', // 路由路径
-    component: Layout,
-    redirect: '/user/index',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/user/index'), // 指向 views/user/index.vue这个页面
-        name: '用户管理',
-        meta: {
-          title: '用户管理', // 侧边栏菜单名称
-          icon: 'table', // 侧边栏菜单图标
-          roles: ['ROLE_SUPER_ADMIN', 'ROLE_USER'] // 动态路由，这些角色可以显示该菜单
-        }
-      }
-    ]
-  },
-  {
-    path: '/documentation',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/documentation/index'),
-        name: 'Documentation',
-        meta: { title: 'Documentation', icon: 'documentation', affix: true }
-      }
-    ]
-  },
-  {
-    path: '/guide',
-    component: Layout,
-    redirect: '/guide/index',
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/guide/index'),
-        name: 'Guide',
-        meta: { title: 'Guide', icon: 'guide', noCache: true }
-      }
-    ]
-  },
+
+  // {
+  //   path: '/documentation',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/documentation/index'),
+  //       name: 'Documentation',
+  //       meta: { title: 'Documentation', icon: 'documentation', affix: true }
+  //     }
+  //   ]
+  // },
+  // {
+  //   path: '/guide',
+  //   component: Layout,
+  //   redirect: '/guide/index',
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/guide/index'),
+  //       name: 'Guide',
+  //       meta: { title: 'Guide', icon: 'guide', noCache: true }
+  //     }
+  //   ]
+  // },
   {
     path: '/profile',
     component: Layout,
@@ -242,47 +145,164 @@ export const constantRoutes = [
  * 根据权限动态添加路由
  */
 export const asyncRoutes = [
+  {
+    path: '/send',
+    component: Layout,
+    redirect: '/send/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/user/send'),
+        name: '我要寄件',
+        meta: { title: '我要寄件', icon: 'skill', roles: ['ROLE_USER'] }
+      }
+    ]
+  },
+  {
+    path: '/deliveryStation',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/deliveryStation/index'),
+        name: '快递网点-员工管理',
+        meta: {
+          title: '员工管理',
+          icon: 'theme',
+          roles: ['ROLE_STATION_ADMIN']
+        }
+      }
+    ]
+  },
+  {
+    path: '/sent',
+    component: Layout,
+    redirect: '/sent/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/user/sent'),
+        name: '我寄的',
+        meta: { title: '我寄的', icon: 'skill', roles: ['ROLE_USER'] }
+      }
+    ]
+  },
+  {
+    path: '/received',
+    component: Layout,
+    redirect: '/received/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/user/received'),
+        name: '我收的',
+        meta: { title: '我收的', icon: 'skill', roles: ['ROLE_USER'] }
+      }
+    ]
+  },
+  {
+    path: '/addressBooks',
+    component: Layout,
+    redirect: '/addressBooks/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/user/addressBooks'),
+        name: '地址簿',
+        meta: { title: '地址簿', icon: 'skill', roles: ['ROLE_USER'] }
+      }
+    ]
+  },
+  {
+    path: '/locationEnquiry',
+    component: Layout,
+    redirect: '/locationEnquiry/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/user/locationEnquiry'),
+        name: '网点查询',
+        meta: { title: '网点查询', icon: 'skill', roles: ['ROLE_USER'] }
+      }
+    ]
+  },
+  // 用户管理路由
+  {
+    path: '/user', // 路由路径
+    component: Layout,
+    redirect: '/user/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/user/index'), // 指向 views/user/index.vue这个页面
+        name: '用户管理',
+        meta: {
+          title: '用户管理', // 侧边栏菜单名称
+          icon: 'table', // 侧边栏菜单图标
+          roles: ['ROLE_SUPER_ADMIN'] // 动态路由，这些角色可以显示该菜单
+        }
+      }
+    ]
+  },
   // 员工管理动态路由
   employeeRouter,
   roleRouter,
+  courierRouter,
 
+  // {
+  //   path: '/permission',
+  //   component: Layout,
+  //   redirect: '/permission/page',
+  //   alwaysShow: true, // will always show the root menu
+  //   name: 'Permission',
+  //   meta: {
+  //     title: 'Permission',
+  //     icon: 'lock',
+  //     roles: ['ROLE_SUPER_ADMIN', 'ROLE_USER'] // you can set roles in root nav
+  //   },
+  //   children: [
+  //     {
+  //       path: 'page',
+  //       component: () => import('@/views/permission/page'),
+  //       name: 'PagePermission',
+  //       meta: {
+  //         title: 'Page Permission',
+  //         roles: ['ROLE_SUPER_ADMIN'] // or you can only set roles in sub nav
+  //       }
+  //     },
+  //     {
+  //       path: 'directive',
+  //       component: () => import('@/views/permission/directive'),
+  //       name: 'DirectivePermission',
+  //       meta: {
+  //         title: 'Directive Permission'
+  //         // if do not set roles, means: this page does not require permission
+  //       }
+  //     },
+  //     {
+  //       path: 'role',
+  //       component: () => import('@/views/permission/role'),
+  //       name: 'RolePermission',
+  //       meta: {
+  //         title: 'Role Permission',
+  //         roles: ['ROLE_SUPER_ADMIN']
+  //       }
+  //     }
+  //   ]
+  // },
   {
-    path: '/permission',
+    path: '/courier/task', // 路由路径
     component: Layout,
-    redirect: '/permission/page',
-    alwaysShow: true, // will always show the root menu
-    name: 'Permission',
-    meta: {
-      title: 'Permission',
-      icon: 'lock',
-      roles: ['ROLE_SUPER_ADMIN', 'ROLE_USER'] // you can set roles in root nav
-    },
+    redirect: '/delivery/task',
     children: [
       {
-        path: 'page',
-        component: () => import('@/views/permission/page'),
-        name: 'PagePermission',
+        path: 'task',
+        component: () => import('@/views/delivery/task'), // 指向 views/user/index.vue这个页面
+        name: '任务大厅',
         meta: {
-          title: 'Page Permission',
-          roles: ['ROLE_SUPER_ADMIN'] // or you can only set roles in sub nav
-        }
-      },
-      {
-        path: 'directive',
-        component: () => import('@/views/permission/directive'),
-        name: 'DirectivePermission',
-        meta: {
-          title: 'Directive Permission'
-          // if do not set roles, means: this page does not require permission
-        }
-      },
-      {
-        path: 'role',
-        component: () => import('@/views/permission/role'),
-        name: 'RolePermission',
-        meta: {
-          title: 'Role Permission',
-          roles: ['ROLE_SUPER_ADMIN']
+          title: '任务大厅', // 侧边栏菜单名称
+          icon: 'table', // 侧边栏菜单图标
+          roles: ['ROLE_DELIVERY_MAN'] // 动态路由，这些角色可以显示该菜单
         }
       }
     ]
@@ -296,7 +316,7 @@ export const asyncRoutes = [
     meta: {
       title: '快递管理',
       icon: 'lock',
-      // roles: ['ROLE_SUPER_ADMIN', 'ROLE_USER'] // you can set roles in root nav
+      roles: ['ROLE_DELIVERY_MAN'] // you can set roles in root nav
     },
     children: [
       {
@@ -305,7 +325,7 @@ export const asyncRoutes = [
         name: 'deliverycollect',
         meta: {
           title: '快递揽收',
-          roles: ['ROLE_DELIVERY_MAN','ROLE_SUPER_ADMIN'] // or you can only set roles in sub nav
+          roles: ['ROLE_DELIVERY_MAN', 'ROLE_SUPER_ADMIN'] // or you can only set roles in sub nav
         }
       },
       {
@@ -314,31 +334,31 @@ export const asyncRoutes = [
         name: 'deliveryplace',
         meta: {
           title: '快递派送',
-          roles: ['ROLE_DELIVERY_MAN','ROLE_SUPER_ADMIN','ROLE_EMPLOYEE']
+          roles: ['ROLE_DELIVERY_MAN', 'ROLE_SUPER_ADMIN', 'ROLE_EMPLOYEE']
           // if do not set roles, means: this page does not require permission
         }
-      },
+      }
 
     ]
   },
-  {
-    path: '/icon',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/icons/index'),
-        name: 'Icons',
-        meta: { title: 'Icons', icon: 'icon', noCache: true }
-      }
-    ]
-  },
+  // {
+  //   path: '/icon',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/icons/index'),
+  //       name: 'Icons',
+  //       meta: { title: 'Icons', icon: 'icon', noCache: true }
+  //     }
+  //   ]
+  // },
 
   /** when your routing map is too long, you can split it into small modules **/
-  componentsRouter,
-  chartsRouter,
-  nestedRouter,
-  tableRouter,
+  // componentsRouter,
+  // chartsRouter,
+  // nestedRouter,
+  // tableRouter,
   {
     path: '/station',
     component: Layout,
@@ -367,62 +387,63 @@ export const asyncRoutes = [
         meta: {
           title: '站点快递',
           icon: 'theme',
-          roles: ['ROLE_SUPER_ADMIN']
+          roles: ['ROLE_STATION_ADMIN', 'ROLE_EMPLOYEE']
         }
       }
     ]
   },
 
-  {
-    path: '/example',
-    component: Layout,
-    redirect: '/example/list',
-    name: 'Example',
-    meta: {
-      title: 'Example',
-      icon: 'el-icon-s-help'
-    },
-    children: [
-      {
-        path: 'create',
-        component: () => import('@/views/example/create'),
-        name: 'CreateArticle',
-        meta: { title: 'Create Article', icon: 'edit' }
-      },
-      {
-        path: 'edit/:id(\\d+)',
-        component: () => import('@/views/example/edit'),
-        name: 'EditArticle',
-        meta: { title: 'Edit Article', noCache: true, activeMenu: '/example/list' },
-        hidden: true
-      },
-      {
-        path: 'list',
-        component: () => import('@/views/example/list'),
-        name: 'ArticleList',
-        meta: { title: 'Article List', icon: 'list' }
-      }
-    ]
-  },
-
-  {
-    path: '/tab',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/tab/index'),
-        name: 'Tab',
-        meta: { title: 'Tab', icon: 'tab' }
-      }
-    ]
-  },
+  // {
+  //   path: '/example',
+  //   component: Layout,
+  //   redirect: '/example/list',
+  //   name: 'Example',
+  //   meta: {
+  //     title: 'Example',
+  //     icon: 'el-icon-s-help'
+  //   },
+  //   children: [
+  //     {
+  //       path: 'create',
+  //       component: () => import('@/views/example/create'),
+  //       name: 'CreateArticle',
+  //       meta: { title: 'Create Article', icon: 'edit' }
+  //     },
+  //     {
+  //       path: 'edit/:id(\\d+)',
+  //       component: () => import('@/views/example/edit'),
+  //       name: 'EditArticle',
+  //       meta: { title: 'Edit Article', noCache: true, activeMenu: '/example/list' },
+  //       hidden: true
+  //     },
+  //     {
+  //       path: 'list',
+  //       component: () => import('@/views/example/list'),
+  //       name: 'ArticleList',
+  //       meta: { title: 'Article List', icon: 'list' }
+  //     }
+  //   ]
+  // },
+  //
+  // {
+  //   path: '/tab',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/tab/index'),
+  //       name: 'Tab',
+  //       meta: { title: 'Tab', icon: 'tab' }
+  //     }
+  //   ]
+  // },
 
   {
     path: '/error',
     component: Layout,
     redirect: 'noRedirect',
     name: 'ErrorPages',
+    hidden: true,
     meta: {
       title: 'Error Pages',
       icon: '404'
@@ -446,6 +467,7 @@ export const asyncRoutes = [
   {
     path: '/error-log',
     component: Layout,
+    hidden: true,
     children: [
       {
         path: 'log',
@@ -456,42 +478,42 @@ export const asyncRoutes = [
     ]
   },
 
-  {
-    path: '/excel',
-    component: Layout,
-    redirect: '/excel/export-excel',
-    name: 'Excel',
-    meta: {
-      title: 'Excel',
-      icon: 'excel'
-    },
-    children: [
-      {
-        path: 'export-excel',
-        component: () => import('@/views/excel/export-excel'),
-        name: 'ExportExcel',
-        meta: { title: 'Export Excel' }
-      },
-      {
-        path: 'export-selected-excel',
-        component: () => import('@/views/excel/select-excel'),
-        name: 'SelectExcel',
-        meta: { title: 'Export Selected' }
-      },
-      {
-        path: 'export-merge-header',
-        component: () => import('@/views/excel/merge-header'),
-        name: 'MergeHeader',
-        meta: { title: 'Merge Header' }
-      },
-      {
-        path: 'upload-excel',
-        component: () => import('@/views/excel/upload-excel'),
-        name: 'UploadExcel',
-        meta: { title: 'Upload Excel' }
-      }
-    ]
-  },
+  // {
+  //   path: '/excel',
+  //   component: Layout,
+  //   redirect: '/excel/export-excel',
+  //   name: 'Excel',
+  //   meta: {
+  //     title: 'Excel',
+  //     icon: 'excel'
+  //   },
+  //   children: [
+  //     {
+  //       path: 'export-excel',
+  //       component: () => import('@/views/excel/export-excel'),
+  //       name: 'ExportExcel',
+  //       meta: { title: 'Export Excel' }
+  //     },
+  //     {
+  //       path: 'export-selected-excel',
+  //       component: () => import('@/views/excel/select-excel'),
+  //       name: 'SelectExcel',
+  //       meta: { title: 'Export Selected' }
+  //     },
+  //     {
+  //       path: 'export-merge-header',
+  //       component: () => import('@/views/excel/merge-header'),
+  //       name: 'MergeHeader',
+  //       meta: { title: 'Merge Header' }
+  //     },
+  //     {
+  //       path: 'upload-excel',
+  //       component: () => import('@/views/excel/upload-excel'),
+  //       name: 'UploadExcel',
+  //       meta: { title: 'Upload Excel' }
+  //     }
+  //   ]
+  // },
 
   // {
   //   path: '/zip',
@@ -517,54 +539,51 @@ export const asyncRoutes = [
         path: 'index',
         component: () => import('@/views/order/index'),
         name: 'order',
-        meta: { title: '订单管理', icon: 'pdf' }
+        meta: {
+          title: '订单管理', icon: 'pdf',
+          roles: ['ROLE_SUPER_ADMIN']
+        }
       }
     ]
   },
 
+  // {
+  //   path: '/station',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/station/index'),
+  //       name: 'station',
+  //       meta: { title: '网点管理', icon: 'theme' }
+  //     }
+  //   ]
+  // },
 
-  {
-    path: '/station',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/station/index'),
-        name: 'station',
-        meta: { title: '网点管理', icon: 'theme' }
-      }
-    ]
-  },
-
-
-
-
-
-
-  {
-
-    path: '/clipboard',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        component: () => import('@/views/clipboard/index'),
-        name: 'ClipboardDemo',
-        meta: { title: 'Clipboard', icon: 'clipboard' }
-      }
-    ]
-  },
-
-  {
-    path: 'external-link',
-    component: Layout,
-    children: [
-      {
-        path: 'https://github.com/PanJiaChen/vue-element-admin',
-        meta: { title: 'External Link', icon: 'link' }
-      }
-    ]
-  },
+  // {
+  //
+  //   path: '/clipboard',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'index',
+  //       component: () => import('@/views/clipboard/index'),
+  //       name: 'ClipboardDemo',
+  //       meta: { title: 'Clipboard', icon: 'clipboard' }
+  //     }
+  //   ]
+  // },
+  //
+  // {
+  //   path: 'external-link',
+  //   component: Layout,
+  //   children: [
+  //     {
+  //       path: 'https://github.com/PanJiaChen/vue-element-admin',
+  //       meta: { title: 'External Link', icon: 'link' }
+  //     }
+  //   ]
+  // },
 
   // 404 page must be placed at the end !!!
   { path: '*', redirect: '/404', hidden: true }

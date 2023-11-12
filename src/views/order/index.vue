@@ -3,22 +3,22 @@
     <el-container>
       <el-form :inline="true" :model=" queryList" label-width="100px">
         <el-form-item label="物流单号" prop="express_number">
-          <el-input v-model=" queryList.express_number" placeholder="物流单号" clearable @input="SearchEvent" />
+          <el-input v-model=" queryList.express_number" placeholder="物流单号" clearable @input="SearchEvent"/>
         </el-form-item>
         <el-form-item label="寄件人姓名" prop="sender_name">
-          <el-input v-model=" queryList.sender_name" placeholder="寄件人姓名" clearable @input="SearchEvent" />
+          <el-input v-model=" queryList.sender_name" placeholder="寄件人姓名" clearable @input="SearchEvent"/>
         </el-form-item>
         <el-form-item label="寄件地址" prop="sender_address">
-          <el-input v-model=" queryList.sender_address" placeholder="寄件地址" clearable @input="SearchEvent" />
+          <el-input v-model=" queryList.sender_address" placeholder="寄件地址" clearable @input="SearchEvent"/>
         </el-form-item>
         <el-form-item label="收件人姓名">
-          <el-input v-model=" queryList.recipient_name" placeholder="收件人姓名" clearable @input="SearchEvent" />
+          <el-input v-model=" queryList.recipient_name" placeholder="收件人姓名" clearable @input="SearchEvent"/>
         </el-form-item>
         <el-form-item label="收件地址">
-          <el-input v-model=" queryList.recipient_address" placeholder="收件地址" clearable @input="SearchEvent" />
+          <el-input v-model=" queryList.recipient_address" placeholder="收件地址" clearable @input="SearchEvent"/>
         </el-form-item>
         <el-form-item label="快递员编号">
-          <el-input v-model=" queryList.courier_code" placeholder="快递员编号" clearable @input="SearchEvent" />
+          <el-input v-model=" queryList.courier_code" placeholder="快递员编号" clearable @input="SearchEvent"/>
         </el-form-item>
         <!-- <el-form-item>
           <el-button size="mini" type="primary" @click="addInfo()">增加网点</el-button>
@@ -28,23 +28,23 @@
       </el-form>
     </el-container>
     <el-dialog :visible.sync="windowVisible" :append-to-body="true">
-      <ActivityWindow v-if="windowVisible" ref="popWindow" :child-prop="parentData" />
+      <ActivityWindow v-if="windowVisible" ref="popWindow" :child-prop="parentData"/>
     </el-dialog>
     <el-dialog :visible.sync="windowVisible_edit" :append-to-body="true">
-      <ActivityWindow1 v-if="windowVisible_edit" ref="popWindow" :child-prop="parentData" />
+      <ActivityWindow1 v-if="windowVisible_edit" ref="popWindow" :child-prop="parentData"/>
       <span slot="footer" class="dialog-footer">
         <el-button type="submit" @click="edit_order">提交</el-button>
         <el-button @click="windowVisible_edit = false">取消</el-button>
       </span>
     </el-dialog>
     <el-table ref="multipleTable" :data="view_order" style="width: 100%" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" />
-      <el-table-column label="物流单号" prop="expressNumber" />
-      <el-table-column label="寄件人姓名" prop="senderName" />
-      <el-table-column label="寄件地址" prop="senderAddress" />
-      <el-table-column label="收件人姓名" prop="recipientName" />
-      <el-table-column label="收货地址" prop="recipientAddress" />
-      <el-table-column label="快递员编号" prop="courierCode" />
+      <el-table-column type="selection" width="55"/>
+      <el-table-column label="物流单号" prop="expressNumber"/>
+      <el-table-column label="寄件人姓名" prop="senderName"/>
+      <el-table-column label="寄件地址" prop="senderAddress"/>
+      <el-table-column label="收件人姓名" prop="recipientName"/>
+      <el-table-column label="收货地址" prop="recipientAddress"/>
+      <el-table-column label="快递员编号" prop="courierCode"/>
       <!-- <el-table-column label="管理员" prop="stationManager" />
       <el-table-column label="管理员电话" prop="managerrecipient_address" /> -->
       <el-table-column label="操作">
@@ -59,16 +59,16 @@
             删除
           </el-button> -->
         </template>
-      <!-- <template v-slot="scope">
-          <el-button
-          size="small"
-          @click="handleEdit(scope.$index, scope.$row)">Edit</el-button>
-          <el-button
-          size="small"
-          type="danger"
-          @click="delete_one(scope.$index, scope.$row)">Delete</el-button>
+        <!-- <template v-slot="scope">
+            <el-button
+            size="small"
+            @click="handleEdit(scope.$index, scope.$row)">Edit</el-button>
+            <el-button
+            size="small"
+            type="danger"
+            @click="delete_one(scope.$index, scope.$row)">Delete</el-button>
 
-      </template> -->
+        </template> -->
       </el-table-column>
     </el-table>
     <el-footer>
@@ -87,6 +87,7 @@ import axios from 'axios'
 import ActivityWindow from './ActivityWindow'
 import ActivityWindow1 from './ActivityWindow1'
 import { queryList, editOrder } from '@/api/manageOrder'
+
 export default {
   // import引入组件才能使用station_name
 
@@ -172,7 +173,12 @@ export default {
       this.parentData = this.view_order[index]
     },
     SearchEvent() {
-      let recipient_address = ''; let recipient_name = ''; let sender_name = ''; let express_number = ''; let sender_address = ''; let courier_code = ''
+      let recipient_address = ''
+      let recipient_name = ''
+      let sender_name = ''
+      let express_number = ''
+      let sender_address = ''
+      let courier_code = ''
       this.select_order = this.total_order
       if (this.queryList.courier_code != '') {
         courier_code = this.queryList.courier_code
@@ -229,7 +235,7 @@ export default {
     },
     getList() {
       console.log('getList')
-      queryList().then(response => {
+      queryList({}).then(response => {
         console.log(response.data)
         this.select_order = response.data
         this.total_order = response.data

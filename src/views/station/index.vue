@@ -133,7 +133,6 @@
       width="80%"
       :before-close="handleAddAdminDialogClose"
     >
-
       <el-row>
         <el-form :inline="true" :model="queryEmployee" class="demo-form-inline">
           <el-form-item label="用户名">
@@ -370,7 +369,7 @@ export default {
           // console.log(seList[i].employeeId)
           this.unavailableIdSet.add(seList[i].employeeId)
         }
-        // console.log(this.unavailableIdSet)
+        console.log('unavailable set: ' + this.unavailableIdSet)
       })
     },
     onStatusChanged(val) {
@@ -422,8 +421,8 @@ export default {
         })
       }
       let unSet = new Set()
-      // console.log(this.queryEmployee.available)
-      // console.log(this.unavailableIdSet)
+      console.log('仅可用: ' + this.queryEmployee.available)
+      console.log(this.unavailableIdSet)
       if (this.queryEmployee.available) {
         //仅查看可用
         unSet = this.unavailableIdSet
@@ -431,7 +430,6 @@ export default {
           return !unSet.has(item.id)
         })
       }
-
     },
     handleAddAdminDialogClose() {
       this.addAdminDialogVisible = false

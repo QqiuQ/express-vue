@@ -1,5 +1,15 @@
 import request from '@/utils/request'
 
+export function queryStationByAddress(address) {
+  return request({
+    url: '/station/near',
+    method: 'post',
+    params: {
+      address: address
+    }
+  })
+}
+
 export function removeStationAdmin(id) {
   return request({
     url: '/station/employee/delete',
@@ -91,11 +101,15 @@ export function deletemanyStation(ids) {
   })
 }
 
-
-// export function getAllRelatedDelivery() {
-//   return ''
-// }
-
+export function getStationDeliveries(stationId) {
+  return request({
+    url: '/station/delivery',
+    method: 'get',
+    params:{
+      stationId:stationId
+    }
+  })
+}
 
 // export function queryUsers(pageParams, user) {
 //   return request({

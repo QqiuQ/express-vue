@@ -1,22 +1,26 @@
 import request from '@/utils/request'
 import axios from 'axios'
+
 // 按照页码和页大小获取用户列表
 
-export function queryList() {
+export function queryList(delivery) {
   return request({
-    url: '/order',
-    method: 'post'
+    url: '/delivery',
+    method: 'post',
+    jsonData: true,
+    data: delivery
   })
 }
 
 export function editOrder(order) {
   return request({
-    url: '/order/edit',
+    url: '/delivery/edit',
     method: 'post',
     jsonData: true,
     data: order
   })
 }
+
 // export function deleteoneStation(id) {
 //   return request({
 //     url: '/station/deleteone',

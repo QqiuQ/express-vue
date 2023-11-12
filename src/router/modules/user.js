@@ -11,7 +11,7 @@ const userRouter = {
       meta: {
         title: '用户管理', // 侧边栏菜单名称
         icon: 'table', // 侧边栏菜单图标
-        roles: ['ROLE_SUPER_ADMIN', 'ROLE_USER'] // 动态路由，这些角色可以显示该菜单
+        roles: ['ROLE_SUPER_ADMIN'] // 动态路由，这些角色可以显示该菜单
       }
     }
   ]
