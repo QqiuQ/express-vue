@@ -92,8 +92,8 @@ export const constantRoutes = [
       {
         path: 'dashboard',
         component: () => import('@/views/dashboard/index'),
-        name: '寄了么党建',
-        meta: { title: '寄了么党建', icon: 'dashboard', affix: true }
+        name: '吃了么党建',
+        meta: { title: '吃了么党建', icon: 'dashboard', affix: true }
       }
     ]
   },
@@ -247,7 +247,7 @@ export const asyncRoutes = [
   // 员工管理动态路由
   employeeRouter,
   roleRouter,
-  courierRouter,
+  // courierRouter,
 
   // {
   //   path: '/permission',

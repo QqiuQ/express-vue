@@ -37,3 +37,12 @@ export function queryUser(id) {
     }
   })
 }
+
+export function register(user) {
+  return request({
+    url: '/register',
+    method: 'post',
+    jsonData: true,
+    data: user
+  })
+}

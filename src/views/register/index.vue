@@ -8,12 +8,12 @@
               <a href="/login"> 已有账号？登录</a>
             </el-button>
           </el-row>
-          <el-form ref="userForm" class="container" :model="userForm" :rules="rules" label-width="100px">
+          <el-form class="container" :model="userForm" :rules="rules" label-width="100px">
             <el-form-item label="昵称" prop="nickname">
-              <el-input v-model="userForm.nickname" placeholder="请输入昵称" />
+              <el-input v-model="userForm.nickname" placeholder="请输入昵称"/>
             </el-form-item>
             <el-form-item label="用户名" prop="username">
-              <el-input v-model="userForm.username" placeholder="请输入用户名" />
+              <el-input v-model="userForm.username" placeholder="请输入用户名"/>
             </el-form-item>
 
             <el-form-item label="性别" prop="sex">
@@ -29,25 +29,24 @@
 
             <el-form-item label="生日">
               <el-form-item prop="birthday">
-                <el-date-picker v-model="userForm.birthday" type="date" placeholder="选择日期" />
+                <el-date-picker v-model="userForm.birthday" type="date" placeholder="选择日期"/>
               </el-form-item>
             </el-form-item>
             <el-form-item label="邮箱" prop="email">
-              <el-input v-model="userForm.email" placeholder="请输入邮箱" />
+              <el-input v-model="userForm.email" placeholder="请输入邮箱"/>
             </el-form-item>
             <el-form-item label="手机号" prop="phone">
-              <el-input v-model="userForm.phone" placeholder="请输入手机号" />
+              <el-input v-model="userForm.phone" placeholder="请输入手机号"/>
             </el-form-item>
             <el-form-item label="密码" prop="password">
-              <el-input v-model="userForm.password" placeholder="请输入密码" show-password />
+              <el-input v-model="userForm.password" placeholder="请输入密码" show-password/>
             </el-form-item>
             <el-form-item label="确认密码" prop="confirmPwd">
-              <el-input v-model="userForm.confirmPwd" placeholder="请再次输入密码" show-password />
+              <el-input v-model="userForm.confirmPwd" placeholder="请再次输入密码" show-password/>
             </el-form-item>
 
             <el-form-item>
-              <el-button type="primary" @click="submitForm('userForm')">注册</el-button>
-              <el-button type="primary" @click="resetForm('userForm')">重置</el-button>
+              <el-button type="primary" @click="submitForm">注册</el-button>
             </el-form-item>
 
           </el-form>
@@ -62,6 +61,8 @@
 </template>
 
 <script>
+import { register } from '@/api/user2'
+
 export default {
 
   data() {
@@ -114,19 +115,15 @@ export default {
     }
   },
   methods: {
-    submitForm(formName) {
-      this.$refs[formName].validate((valid) => {
-        console.log(valid)
-        if (valid) {
-          alert('submit!')
-        } else {
-          console.log('error submit!!')
-          return false
-        }
+    submitForm() {
+      console.log("register")
+      register(this.userForm).then(res => {
+        this.$message.success('注册成功,返回登录')
+        this.$router.push('/login')
       })
     },
-    resetForm(formName) {
-      this.$refs[formName].resetFields()
+    resetForm() {
+      this.userForm.resetFields()
     },
     sexChanged(val) {
       this.userForm.sex = val
@@ -136,7 +133,7 @@ export default {
 </script>
 
 <style>
-  .register-container {
-    margin: 10px;
-  }
+.register-container {
+  margin: 10px;
+}
 </style>

@@ -9,7 +9,7 @@
           <img src="../../assets/images/ldqz.png" alt="镰刀锤子">
           <div style="display: flex; flex-direction: column; margin-left: 30px; border-right: white solid; padding-right: 50px">
             <span style="font-weight: bold; font-size: 28px; color: white">中国共产党</span>
-            <span style="font-weight: bold; font-size: 28px; color: white">寄了么支部</span>
+            <span style="font-weight: bold; font-size: 28px; color: white">吃了吗支部</span>
           </div>
         </div>
         <div style="flex: 2.3; display: flex; align-items: center">
